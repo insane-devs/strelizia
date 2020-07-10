@@ -4,8 +4,7 @@ module.exports = class extends Command {
 
 	constructor(...args) {
 		super(...args, {
-			permissionLevel: 8,
-
+			permissionLevel: 10,
 			description: 'Execute commands in the terminal, use with EXTREME CAUTION.',
 			usage: '<Expression:string>'
 		});
