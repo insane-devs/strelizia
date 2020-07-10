@@ -13,6 +13,7 @@ module.exports = class extends Task {
 		const messages = [];
 		const obj = {};
 		const options = { limit: 100 };
+		const lastPostID = this.client.settings.get('lastLeaderboardPost');
 		let lastID = this.client.settings.get('eventID');
 		let totalImages = 0;
 
@@ -26,7 +27,7 @@ module.exports = class extends Task {
 			} catch (err) { break; }
 		}
 
-		const index = messages.sort((a, b) => b.createdTimestamp - a.createdTimestamp).findIndex(msg => msg.author.id === this.client.user.id);
+		const index = messages.findIndex(msg => msg.id === lastPostID);
 
 		if (!force && index < 50) return null;
 
@@ -41,6 +42,7 @@ module.exports = class extends Task {
 		await this.client.users.get('296862433136476160').send(`Successfully sent message in ${eventChannel}`);
 
 		return eventChannel.send(`**Top Daily Posters in ${eventChannel}**\n\n*Total images posted: ${totalImages}*${codeBlock('asciidoc', sorted.join('\n'))}`)
+			.then(async (msg) => await this.client.settings.update('lastLeaderboardPost', msg.id))
 			.catch(err => err);
 	}
 
