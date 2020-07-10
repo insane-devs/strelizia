@@ -27,7 +27,7 @@ module.exports = class extends Task {
 			} catch (err) { break; }
 		}
 
-		const index = messages.findIndex(msg => msg.id === lastPostID);
+		const index = messages.sort((a, b) => b.createdTimestamp - a.createdTimestamp).findIndex(msg => msg.id === lastPostID);
 
 		if (!force && index < 50) return null;
 
