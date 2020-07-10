@@ -1,0 +1,24 @@
+{
+  "name": "status-bot",
+  "version": "1.0.0-alpha",
+  "description": "A simple Discord bot you can use to inform users about your bot's status regarding uptime, maintenance, updates and more!",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "pm2 start src/app.js --name StatusBot --node-args=\"--expose-gc\"; pm2 logs"
+  },
+  "engines": {
+    "node": "^13.6.0"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@lavacord/discord.js": "^0.0.7",
+    "discord.js": "github:discordjs/discord.js#fe7df708e44e0280dfaf0f8e457b154781bb5140",
+    "klasa": "github:dirigeants/klasa#settings",
+    "node-fetch": "^2.3.0"
+  },
+  "devDependencies": {
+    "eslint": "^5.11.1",
+    "eslint-config-klasa": "github:dirigeants/klasa-lint",
+    "pm2": "^3.2.4"
+  }
+}

@@ -1,0 +1,5 @@
+src/bwd/
+watch.json
+.env
+node_modules
+config.js
