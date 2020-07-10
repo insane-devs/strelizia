@@ -7,7 +7,7 @@
     "start": "pm2 start src/app.js --name StatusBot --node-args=\"--expose-gc\"; pm2 logs"
   },
   "engines": {
-    "node": "^13.6.0"
+    "node": ">=13.6.0"
   },
   "license": "MIT",
   "dependencies": {
