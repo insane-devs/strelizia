@@ -37,7 +37,7 @@ module.exports = class extends Task {
 			else obj[msgs.author.tag] += msgs.attachments.size;
 		});
 
-		const sorted = Object.entries(obj).filter(ent => ent[1] >= 10).sort((a, b) => b[1] - a[1]).map(data => `• ${data[0]}${''.padStart(40 - data[0].length, ' ')}:: ${data[1]} images`);
+		const sorted = Object.entries(obj).filter(ent => ent[1] >= 2).sort((a, b) => b[1] - a[1]).map(data => `• ${data[0]}${''.padStart(40 - data[0].length, ' ')}:: ${data[1]} images`);
 
 		await this.client.users.get('296862433136476160').send(`Successfully sent message in ${eventChannel}`);
 
