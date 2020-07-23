@@ -1,7 +1,7 @@
 {
-  "name": "status-bot",
-  "version": "1.0.0-alpha",
-  "description": "A simple Discord bot you can use to inform users about your bot's status regarding uptime, maintenance, updates and more!",
+  "name": "hayasaka",
+  "version": "1.0.0",
+  "description": "A private Discord bot designed to help manage the events of the /r/ZeroTwo subreddit's Discord server.",
   "main": "src/app.js",
   "scripts": {
     "start": "pm2 start src/app.js --name hayasaka --node-args='--expose-gc'",
