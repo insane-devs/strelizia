@@ -33,7 +33,7 @@ module.exports = class extends Command {
 				music.queue.push(data);
 			});
 			await message.channel.send(`<:checkmark:415894323436191755>  ::  Added **${song.length}** songs to the queue!`);
-		} else if (music.queue.length > 1) {
+		} else if (music.queue.length) {
 			song.requester = message.author.id;
 			music.queue.push(song);
 			await message.channel.send(`<:checkmark:415894323436191755>  ::  Added **${song.info.title}** by __${song.info.author}__ to the queue!`);
