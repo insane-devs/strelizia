@@ -50,14 +50,18 @@ module.exports = class extends Command {
 		return message.send('<:checkmark:415894323436191755>  ::  Successfully cleared the queue for this server');
 	}
 
-	async remove(message) {
+	async remove(message, [number]) {
 		const { queue } = message.guild.music;
 		if (!message.member.roles.has(message.guild.settings.get('roles.dj')) && message.member.voice.channel.members
 			.filter(member => !member.user.bot)
 			.some(member => member.roles.has(message.guild.settings.get('roles.dj')))) throw '<:xmark:415894324719386634>  ::  There is a DJ in your music session, only DJs can use this command.';
-		const msg = await message.prompt('<a:typing:492356308943503370>  ::  Please input the queue number that you want to delete.');
-		const number = Number(msg.content);
-		if (isNaN(number) || number <= 0) throw '<:xmark:415894324719386634>  ::  Invalid number. Exiting prompt';
+
+		if (!number) {
+			const msg = await message.prompt('<a:typing:492356308943503370>  ::  Please input the queue number that you want to delete.');
+			number = Number(msg.content);
+			if (isNaN(number) || number <= 0) throw '<:xmark:415894324719386634>  ::  Invalid number. Exiting prompt';
+		}
+
 		const item = queue[number];
 		if (!item) throw `<:xmark:415894324719386634>  ::  Sorry I can't find a track with a queue number \`${number}\`. Please run \`>queue\` again to see the whole complete list`;
 		queue.splice(number, number);
