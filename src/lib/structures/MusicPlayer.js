@@ -1,4 +1,4 @@
-const playlistIDRegex = new RegExp('[&?]list=([^&]+)', 'g');
+const playlistIDRegex = new RegExp('[&?]list=([a-z0-9_-]+)', 'i');
 const fetch = require('node-fetch');
 class MusicPlayer {
 
