@@ -49,11 +49,6 @@ module.exports = class extends Command {
 			await message.channel.send(`Connected to voice channel and now bound to ${music.textChannel}`);
 			await music.textChannel.send(`Now playing: **${currentTrack.info.title}** by __${currentTrack.info.author}__`);
 
-			music.player.once('error', async err => {
-				this.client.emit('wtf', err);
-				await music.destroy();
-			});
-
 			music.player.on('end', async data => {
 				if (data.reason === 'REPLACED') return;
 				if (currentTrack.info.isStream) return;
