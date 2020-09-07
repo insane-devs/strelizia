@@ -20,7 +20,7 @@ module.exports = class extends Command {
 		if (!message.member.voice.channel.permissionsFor(message.guild.me).serialize().CONNECT) throw '<:xmark:415894324719386634>  ::  I do not have the correct permissions to join that channel';
 		if (!message.member.voice.channel.permissionsFor(message.guild.me).serialize().SPEAK) throw '<:xmark:415894324719386634>  ::  Please allow me to speak in this channel so that I can play music';
 
-		if (!(music.voiceChannel || music.player)) music.join(message.member.voice.channel.id);
+		if (!music.player) music.join(message.member.voice.channel.id);
 
 		if (music.voiceChannel && message.member.voice.channel.id !== music.voiceChannel.id) throw '<:xmark:415894324719386634>  ::  We should be on the same voice channel for you to do this';
 
@@ -46,7 +46,7 @@ module.exports = class extends Command {
 			await music.play()
 				.catch((err) => message.send(err));
 			music.textChannel = message.channel;
-			await message.channel.send(`Connected to voice channel and now bound to ${music.textChannel}`);
+			if (!music.voiceChannel) await message.channel.send(`Connected to voice channel and now bound to ${music.textChannel}`);
 			await music.textChannel.send(`Now playing: **${currentTrack.info.title}** by __${currentTrack.info.author}__`);
 
 			music.player.on('end', async data => {

@@ -10,7 +10,7 @@ class MusicPlayer {
 		this.channel = null;
 		this.isPlaying = false;
 		this.paused = false;
-		this.volume = 100;
+		this.volume = 20;
 	}
 
 	/**
@@ -36,7 +36,7 @@ class MusicPlayer {
 		if (!this.player) throw '<:xmark:415894324719386634>  ::  I could not find a connection.';
 		if (!this.queue.length) throw 'No more songs left in the queue.';
 		const [song] = this.queue;
-		await this.player.play(song.track);
+		await this.player.play(song.track, { volume: this.volume });
 		this.isPlaying = true;
 		return this.player;
 	}
@@ -123,7 +123,7 @@ class MusicPlayer {
 		this.channel = null;
 		this.isPlaying = false;
 		this.paused = false;
-		this.volume = 100;
+		this.volume = 20;
 
 		await this.leave();
 		this.client.music.delete(this.guild.id);
