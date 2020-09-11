@@ -1,4 +1,3 @@
-const playlistIDRegex = new RegExp('[&?]list=([a-z0-9_-]+)', 'i');
 const fetch = require('node-fetch');
 class MusicPlayer {
 
@@ -142,16 +141,14 @@ class MusicPlayer {
 	}
 
 	async getSong(search) {
-		let str = search;
 		// This gets the best node available, what I mean by that is the idealNodes getter will filter all the connected nodes and then sort them from best to least beast.
 		const node = this.client.lavacord.idealNodes[0];
-		if (playlistIDRegex.test(search)) str = `https://youtube.com/playlist?list=${playlistIDRegex.exec(search)[1]}`;
 		const params = new URLSearchParams();
-		params.append('identifier', str);
+		params.append('identifier', search);
 
 		return fetch(`http://${node.host}:${node.port}/loadtracks?${params}`, { headers: { Authorization: node.password } })
 			.then(res => res.json())
-			.then(data => data.tracks)
+			.then(data => data)
 			.catch(err => {
 				console.error(err);
 				return null;
@@ -168,12 +165,20 @@ class MusicPlayer {
 		} catch (err) {
 			songs = await this.getSong(`ytsearch: ${track}`);
 		}
-		if (!songs) throw 'There was an error with your search query, try again another keyword';
-		if (!songs.length) throw 'No tracks found';
 
-		if (/[?&]list/.test(track)) return songs;
+		const { loadType, tracks } = songs;
 
-		return songs[0];
+		switch (loadType) {
+			case 'PLAYLIST_LOADED':
+				return tracks;
+			case 'SEARCH_RESULT':
+			case 'TRACK_LOADED':
+				return tracks[0];
+			case 'NO_MATCHES':
+				throw 'No tracks found.';
+			default:
+				throw 'There was an error with your search query, try again another keyword.';
+		}
 	}
 
 	get player() {
