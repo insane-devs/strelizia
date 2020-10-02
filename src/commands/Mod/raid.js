@@ -15,14 +15,14 @@ module.exports = class extends Command {
 	}
 
 	async run(message) {
-		if (message.guild.id !== '508495069914071040' && !message.member.roles.has('508800814421114887')) return null;
+		if (message.guild.id !== '508495069914071040' && !message.member.roles.cache.has('508800814421114887')) return null;
 		if (message.guild.settings.get('raidmode')) throw 'Anti-raid is already enabled.';
 		await message.guild.settings.update('raidmode', true);
 		return message.send('🛡  ::  Anti-raid mode enabled.');
 	}
 
 	async off(message) {
-		if (message.guild.id !== '508495069914071040' && !message.member.roles.has('508800814421114887')) return null;
+		if (message.guild.id !== '508495069914071040' && !message.member.roles.cache.has('508800814421114887')) return null;
 		if (!message.guild.settings.get('raidmode')) throw 'Anti-raid is already disabled.';
 		await message.guild.settings.reset('raidmode');
 		return message.success('Anti-raid mode disabled.');

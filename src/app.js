@@ -20,5 +20,5 @@ new HayasakaClient({
 	},
 	regexPrefix: /^((?:Hey )?(Haya|Hayasaka)(?:,|!| ))/i,
 	typing: true,
-	readyMessage: (client) => `Successfully initialized. Ready to serve ${client.guilds.size} guilds.`
+	readyMessage: (client) => `Successfully initialized. Ready to serve ${client.guilds.cache.size} guilds.`
 }).login(token);

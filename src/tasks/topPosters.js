@@ -8,8 +8,8 @@ module.exports = class extends Task {
 
 	async run({ guild, force = false }) {
 		if (!this.client.settings.get('eventID')) return null;
-		const _guild = this.client.guilds.get(guild);
-		const eventChannel = _guild.channels.get('534138604281266195');
+		const _guild = this.client.guilds.cache.get(guild);
+		const eventChannel = _guild.channels.cache.get('534138604281266195');
 		const messages = [];
 		const obj = {};
 		const options = { limit: 100 };
@@ -39,7 +39,7 @@ module.exports = class extends Task {
 
 		const sorted = Object.entries(obj).filter(ent => ent[1] >= 2).sort((a, b) => b[1] - a[1]).map(data => `• ${data[0]}${''.padStart(40 - data[0].length, ' ')}:: ${data[1]} images`);
 
-		await this.client.users.get('296862433136476160').send(`Successfully sent message in ${eventChannel}`);
+		await this.client.users.cache.get('296862433136476160').send(`Successfully sent message in ${eventChannel}`);
 
 		return eventChannel.send(`**Top Daily Posters in ${eventChannel}**\n\n*Total images posted: ${totalImages}*${codeBlock('asciidoc', sorted.join('\n'))}`)
 			.then(async (msg) => await this.client.settings.update('lastLeaderboardPost', msg.id))
