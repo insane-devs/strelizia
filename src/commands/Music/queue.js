@@ -41,9 +41,9 @@ module.exports = class extends Command {
 
 	async clear(message) {
 		const { music } = message.guild;
-		if (!message.member.roles.cache.has(message.guild.settings.get('roles.dj')) && message.member.voice.channel.members
+		if (!message.member.roles.has(message.guild.settings.get('roles.dj')) && message.member.voice.channel.members
 			.filter(member => !member.user.bot)
-			.some(member => member.roles.cache.has(message.guild.settings.get('roles.dj')))) throw '<:xmark:415894324719386634>  ::  There is a DJ in your music session, only DJs can use this command.';
+			.some(member => member.roles.has(message.guild.settings.get('roles.dj')))) throw '<:xmark:415894324719386634>  ::  There is a DJ in your music session, only DJs can use this command.';
 		const [first] = music.queue;
 		music.clearQueue();
 		music.queue.unshift(first);
@@ -52,9 +52,9 @@ module.exports = class extends Command {
 
 	async remove(message, [number]) {
 		const { queue } = message.guild.music;
-		if (!message.member.roles.cache.has(message.guild.settings.get('roles.dj')) && message.member.voice.channel.members
+		if (!message.member.roles.has(message.guild.settings.get('roles.dj')) && message.member.voice.channel.members
 			.filter(member => !member.user.bot)
-			.some(member => member.roles.cache.has(message.guild.settings.get('roles.dj')))) throw '<:xmark:415894324719386634>  ::  There is a DJ in your music session, only DJs can use this command.';
+			.some(member => member.roles.has(message.guild.settings.get('roles.dj')))) throw '<:xmark:415894324719386634>  ::  There is a DJ in your music session, only DJs can use this command.';
 
 		if (!number) {
 			const msg = await message.prompt('<a:typing:492356308943503370>  ::  Please input the queue number that you want to delete.');

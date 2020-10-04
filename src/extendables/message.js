@@ -57,7 +57,7 @@ module.exports = class extends Extendable {
 const awaitReaction = async (msg, message) => {
 	await message.react('🇾');
 	await message.react('🇳');
-	const data = await message.awaitReactions(reaction => reaction.users.cache.has(msg.author.id), { time: 20000, max: 1 });
+	const data = await message.awaitReactions(reaction => reaction.users.has(msg.author.id), { time: 20000, max: 1 });
 	if (data.firstKey() === '🇾') return true;
 	throw null;
 };

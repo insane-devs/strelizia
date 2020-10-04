@@ -16,9 +16,9 @@ module.exports = class extends Command {
 
 		message.sendMessage([
 			'= STATISTICS =',
-			`• Users     ::  ${this.client.guilds.cache.reduce((a, b) => a + b.memberCount, 0).toLocaleString()}`,
-			`• Guilds    ::  ${this.client.guilds.cache.size.toLocaleString()}`,
-			`• Channels  ::  ${this.client.channels.cache.size.toLocaleString()}`,
+			`• Users     ::  ${this.client.guilds.reduce((a, b) => a + b.memberCount, 0).toLocaleString()}`,
+			`• Guilds    ::  ${this.client.guilds.size.toLocaleString()}`,
+			`• Channels  ::  ${this.client.channels.size.toLocaleString()}`,
 			`• Version   ::  v${discordVersion}`,
 			`• Node JS   ::  ${process.version}`,
 			`• Klasa     ::  ${klasaVersion}`,

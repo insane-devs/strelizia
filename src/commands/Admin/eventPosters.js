@@ -14,7 +14,7 @@ module.exports = class extends Command {
 	}
 
 	async run(message) {
-		const guild = this.client.guilds.cache.get('508495069914071040');
+		const guild = this.client.guilds.get('508495069914071040');
 		await this.client.tasks.get('topPosters').run({ guild: guild.id, force: true });
 		return message.react('719909409509212190');
 	}
