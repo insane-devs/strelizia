@@ -8,7 +8,9 @@ module.exports = class extends Event {
 
 		const auditData = (await guild.fetchAuditLogs({
 			type: 22
-		})).entries.find(data => data.target === user);
+		})).entries
+			.sort((a, b) => b.createdTimestamp - a.createdTimestamp)
+			.find(data => data.target === user);
 		if (!auditData) return;
 		const { executor, reason } = auditData;
 
