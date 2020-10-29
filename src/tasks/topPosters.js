@@ -21,7 +21,7 @@ module.exports = class extends Task {
 		while (true) {
 			try {
 				if (lastID) options.after = lastID;
-				const msgs = await eventChannel.messages.fetch(options);
+				const msgs = await eventChannel.messages.fetch(options, false);
 				messages.push(...msgs.array());
 				lastID = msgs.first().id;
 			} catch (err) { break; }
