@@ -30,7 +30,7 @@ module.exports = class extends Command {
 
 	async add(message, [user, priority, ..._reason]) {
 		if (!user) throw 'Who do I add?';
-		if (!(priority && ['high', 'medium', 'low'].includes(priority.toLowerCase()))) throw 'Please include a priority level for this user, the options are `high`, `medium` and `low`';
+		if (!priority) throw 'Please include a priority level for this user, the options are `high`, `medium` and `low`';
 
 		const reason = _reason.length ? _reason.join(' ') : 'No reason provided';
 		const watchlist = message.guild.settings.get('watchlist');
@@ -57,12 +57,12 @@ module.exports = class extends Command {
 		const watchlist = message.guild.settings.get('watchlist');
 		if (!this._exists(watchlist, user.id)) throw 'This user is not in the watchlist, perhaps you want to add an entry?';
 		const entry = watchlist.find(data => data.user === user.id);
-		if (['high', 'medium', 'low'].includes(priority.toLowerCase())) {
+		if (priority) {
 			entry.priority = priority;
 			entry.reason = _reason.length ? _reason.join(' ') : entry.reason;
 		} else {
 			if (!_reason.length) throw 'You did not include a new reason.';
-			entry.reason = `${priority} ${_reason.join(' ')}`;
+			entry.reason = _reason.join(' ');
 		}
 		await message.guild.settings.update('watchlist', entry, { guild: message.guild, arrayIndex: watchlist.indexOf(entry) });
 		this.client.emit('watchdog', message);
