@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 const { Command, Stopwatch, Type, util } = require('klasa');
 const { inspect } = require('util');
 const fetch = require('node-fetch');
@@ -92,6 +93,9 @@ module.exports = class extends Command {
 	// Eval the input
 	async eval(msg, code) {
 		const stopwatch = new Stopwatch();
+		const klasa = require('klasa');
+		const discord = require('discord.js');
+		const message = msg;
 		let success, syncTime, asyncTime, result;
 		let thenable = false;
 		let type;
