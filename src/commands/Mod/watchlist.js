@@ -37,7 +37,7 @@ module.exports = class extends Command {
 		if (this._exists(watchlist, user.id)) throw 'This user is already in the watchlist, perhaps you would like to remove the user or edit the user\'s entry.';
 		await message.guild.settings.update('watchlist', { priority, user: user.id, reason, moderator: message.author.id }, { guild: message.guild, arrayAction: 'add' });
 		this.client.emit('watchdog', message);
-		return message.send(`Successfully added ${user} to the ${priority.toUpperCase()} priority watchlist.`);
+		return message.sendEmbed({ color: 'GREEN', description: `Successfully added ${user} to the ${priority.toUpperCase()} priority watchlist.` });
 	}
 
 	async remove(message, [user]) {
@@ -48,7 +48,7 @@ module.exports = class extends Command {
 		const entry = watchlist.find(data => data.user === user.id);
 		await message.guild.settings.update('watchlist', entry, { guild: message.guild, action: 'remove' });
 		this.client.emit('watchdog', message);
-		return message.send(`Successfully removed ${user} from the watchlist.`);
+		return message.sendEmbed({ color: 'GREEN', description: `Successfully removed ${user} from the watchlist.` });
 	}
 
 	async edit(message, [user, priority, ..._reason]) {
@@ -66,7 +66,7 @@ module.exports = class extends Command {
 		}
 		await message.guild.settings.update('watchlist', entry, { guild: message.guild, arrayIndex: watchlist.indexOf(entry) });
 		this.client.emit('watchdog', message);
-		return message.send(`Successfully updated watchlist entry for ${user}`);
+		return message.sendEmbed({ color: 'GREEN', description: `Successfully updated watchlist entry for ${user}` });
 	}
 
 	_exists(array, target) {
@@ -76,7 +76,7 @@ module.exports = class extends Command {
 	_filterByPriority(array, priority) {
 		const filtered = array.filter(data => data.priority === priority);
 		return filtered.length ?
-			filtered.map(({ user, reason, moderator }) => `<@${user}> ─ ${reason} (<@${moderator}>)`).join('\n') :
+			filtered.map(({ user, reason, moderator }) => `• <@${user}> ─ ${reason} (<@${moderator}>)`).join('\n') :
 			'Empty';
 	}
 
