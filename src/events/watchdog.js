@@ -31,7 +31,7 @@ module.exports = class extends Event {
 	_filterByPriority(array, priority) {
 		const filtered = array.filter((data) => data.priority === priority);
 		return filtered.length ?
-			filtered.map(({ user, reason, moderator }) => `<@${user}> ─ ${reason} (<@${moderator}>)`).join('\n') :
+			filtered.map(({ user, reason, moderator }) => `• <@${user}> ─ ${reason} (<@${moderator}>)`).join('\n') :
 			'Empty';
 	}
 
