@@ -42,7 +42,11 @@ module.exports = class extends Task {
 		await this.client.users.get('296862433136476160').send(`Successfully sent message in ${eventChannel}`);
 
 		return eventChannel.send(`**Top Daily Posters in ${eventChannel}**\n\n*Total images posted: ${totalImages}*${codeBlock('asciidoc', sorted.join('\n'))}`)
-			.then(async (msg) => await this.client.settings.update('lastLeaderboardPost', msg.id))
+			.then(async (msg) => {
+				await this.client.settings.update('lastLeaderboardPost', msg.id);
+				messages.length = 0;
+				sorted.length = 0;
+			})
 			.catch(err => err);
 	}
 
