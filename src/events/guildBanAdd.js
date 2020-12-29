@@ -15,7 +15,7 @@ module.exports = class extends Event {
 		const { executor, reason } = auditData;
 
 		if (executor.bot) return;
-		await this.client.channels.get('573122270646501376').send(new MessageEmbed()
+		await this.client.channels.cache.get('573122270646501376').send(new MessageEmbed()
 			.setAuthor('🚨 Member Banned', user.displayAvatarURL())
 			.setDescription(`**ID**: ${user.id}`)
 			.addField('User', user.tag)

@@ -5,7 +5,7 @@ module.exports = class extends Event {
 
 	async run(message) {
 		const [channel, id, watchlist] = message.guild.settings.pluck('watchdog.channel', 'watchdog.messageID', 'watchlist');
-		const textChannel = await message.guild.channels.get(channel);
+		const textChannel = await message.guild.channels.cache.get(channel);
 
 		if (!(channel || textChannel)) return;
 
