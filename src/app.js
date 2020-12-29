@@ -25,5 +25,8 @@ new HayasakaClient({
 	prefix: prefix,
 	readyMessage: (client) => `Successfully initialized. Ready to serve ${client.guilds.cache.size} guilds.`,
 	regexPrefix: /^((?:Hey )?(Haya|Hayasaka)(?:,|!| ))/i,
-	typing: true
+	typing: true,
+	ws: {
+		intents: ['GUILDS', 'GUILD_MEMBERS', 'GUILD_BANS', 'GUILD_MESSAGES']
+	}
 }).login(token);
