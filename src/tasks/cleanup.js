@@ -29,7 +29,7 @@ module.exports = class MemorySweeper extends Task {
 		let presences = 0, guildMembers = 0, voiceStates = 0, lastMessages = 0, users = 0;
 
 		// Per-Guild sweeper
-		for (const guild of this.client.guilds.values()) {
+		for (const guild of this.client.guilds.cache.values()) {
 			// Clear presences
 			presences += guild.presences.size;
 			guild.presences.clear();
@@ -48,14 +48,14 @@ module.exports = class MemorySweeper extends Task {
 		}
 
 		// Per-Channel sweeper
-		for (const channel of this.client.channels.values()) {
+		for (const channel of this.client.channels.cache.values()) {
 			if (!channel.lastMessageID) continue;
 			channel.lastMessageID = null;
 			lastMessages++;
 		}
 
 		// Per-User sweeper
-		for (const user of this.client.users.values()) {
+		for (const user of this.client.users.cache.values()) {
 			if (user.lastMessageID && user.lastMessageID > OLD_SNOWFLAKE) continue;
 			this.client.users.delete(user.id);
 			users++;
