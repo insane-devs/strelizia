@@ -27,6 +27,21 @@ new HayasakaClient({
 	regexPrefix: /^((?:Hey )?(Haya|Hayasaka)(?:,|!| ))/i,
 	typing: true,
 	ws: {
-		intents: ['GUILDS', 'GUILD_MEMBERS', 'GUILD_BANS', 'GUILD_MESSAGES']
+		intents: [
+			'GUILDS',
+			'GUILD_MEMBERS',
+			'GUILD_BANS',
+			'GUILD_EMOJIS',
+			'GUILD_INTEGRATIONS',
+			'GUILD_WEBHOOKS',
+			'GUILD_INVITES',
+			'GUILD_VOICE_STATES',
+			'GUILD_PRESENCES',
+			'GUILD_MESSAGES',
+			'GUILD_MESSAGE_REACTIONS',
+			'GUILD_MESSAGE_TYPING',
+			'DIRECT_MESSAGES',
+			'DIRECT_MESSAGE_REACTIONS'
+		]
 	}
 }).login(token);
