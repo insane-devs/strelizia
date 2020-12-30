@@ -31,8 +31,8 @@ module.exports = class MemorySweeper extends Task {
 		// Per-Guild sweeper
 		for (const guild of this.client.guilds.cache.values()) {
 			// Clear presences
-			presences += guild.presences.size;
-			guild.presences.clear();
+			presences += guild.presences.cache.size;
+			guild.presences.cache.clear();
 
 			// Clear members that haven't send a message in the last 30 minutes
 			const { me } = guild;
@@ -42,8 +42,8 @@ module.exports = class MemorySweeper extends Task {
 				if (member.lastMessageID && member.lastMessageID > OLD_SNOWFLAKE) continue;
 				guildMembers++;
 				voiceStates++;
-				guild.voiceStates.delete(id);
-				guild.members.delete(id);
+				guild.voiceStates.cache.delete(id);
+				guild.members.cache.delete(id);
 			}
 		}
 
@@ -57,7 +57,7 @@ module.exports = class MemorySweeper extends Task {
 		// Per-User sweeper
 		for (const user of this.client.users.cache.values()) {
 			if (user.lastMessageID && user.lastMessageID > OLD_SNOWFLAKE) continue;
-			this.client.users.delete(user.id);
+			this.client.users.cache.delete(user.id);
 			users++;
 		}
 
