@@ -15,15 +15,25 @@ module.exports = class extends Event {
 		const { executor, reason } = auditData;
 
 		if (executor.bot) return;
-		await this.client.channels.cache.get('573122270646501376').send(new MessageEmbed()
-			.setAuthor('🚨 Member Banned', user.displayAvatarURL())
-			.setDescription(`**ID**: ${user.id}`)
-			.addField('User', user.tag)
-			.addField('Banned by:', executor.tag, true)
-			.addField('Reason', reason || 'None', true)
-			.setColor('RED')
-			.setFooter(`Joined Discord: ${Duration.toNow(user.createdTimestamp)} ago`)
-			.setTimestamp()).catch(console.error);
+		if (auditData) {
+			await this.client.channels.cache.get('573122270646501376').send(new MessageEmbed()
+				.setAuthor('🚨 Member Banned', user.displayAvatarURL())
+				.setDescription(`**ID**: ${user.id}`)
+				.addField('User', user.tag)
+				.addField('Banned by:', executor.tag, true)
+				.addField('Reason', reason || 'None', true)
+				.setColor('RED')
+				.setFooter(`Joined Discord: ${Duration.toNow(user.createdTimestamp)} ago`)
+				.setTimestamp()).catch(console.error);
+		} else {
+			await this.client.channels.cache.get('573122270646501376').send(new MessageEmbed()
+				.setAuthor('🚨 Member Banned', user.displayAvatarURL())
+				.setDescription(`**ID**: ${user.id}`)
+				.addField('User', user.tag)
+				.setColor('RED')
+				.setFooter(`Joined Discord: ${Duration.toNow(user.createdTimestamp)} ago`)
+				.setTimestamp()).catch(console.error);
+		}
 	}
 
 };
