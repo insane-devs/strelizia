@@ -11,11 +11,11 @@ module.exports = class extends Event {
 		})).entries
 			.sort((a, b) => b.createdTimestamp - a.createdTimestamp)
 			.find(data => data.target === user);
-		if (!auditData) return;
-		const { executor, reason } = auditData;
 
-		if (executor.bot) return;
 		if (auditData) {
+			const { executor, reason } = auditData;
+			if (executor.bot) return;
+
 			await this.client.channels.cache.get('573122270646501376').send(new MessageEmbed()
 				.setAuthor('🚨 Member Banned', user.displayAvatarURL())
 				.setDescription(`**ID**: ${user.id}`)
