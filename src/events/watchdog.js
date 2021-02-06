@@ -14,7 +14,7 @@ module.exports = class extends Event {
 				.catch(async () => {
 					const entry = watchlist.find(data => data.user === user.id);
 					entry.left = true;
-					await message.guild.settings.update('watchlist', entry, { guild: message.guild, arrayIndex: watchlist.indexOf(entry) });
+					await message.guild.settings.update('watchlist', entry, message.guild, { arrayIndex: watchlist.indexOf(entry) });
 				});
 		});
 
