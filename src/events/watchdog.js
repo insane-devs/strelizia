@@ -9,14 +9,11 @@ module.exports = class extends Event {
 
 		if (!(channel || textChannel)) return;
 
-		watchlist.forEach(async ({ user }) => {
-			await message.guild.members.fetch(user)
-				.catch(async () => {
-					const entry = watchlist.find(data => data.user === user.id);
-					entry.left = true;
-					await message.guild.settings.update('watchlist', entry, message.guild, { arrayIndex: watchlist.indexOf(entry) });
-				});
-		});
+		watchlist.forEach(async (data) => message.guild.members.fetch(data.user)
+			.catch(async () => {
+				data.left = true;
+				return message.guild.settings.update('watchlist', data, message.guild, { arrayPosition: watchlist.indexOf(data) });
+			}));
 
 		try {
 			const msg = await textChannel.messages.fetch(id);
