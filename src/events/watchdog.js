@@ -20,7 +20,7 @@ module.exports = class extends Event {
 			await msg.edit(this.buildEmbed(message, watchlist));
 		} catch (err) {
 			const msg = await textChannel.send(this.buildEmbed(message, watchlist));
-			await message.guild.settings.update('watchdog.messageID', msg.id, { guild: message.guild });
+			await message.guild.settings.update('watchdog.messageID', msg.id, message.guild);
 		}
 	}
 

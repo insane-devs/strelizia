@@ -18,7 +18,7 @@ module.exports = class extends Command {
 		if (!await message.hasAtLeastPermissionLevel(6)) throw message.language.get('INHIBITOR_PERMISSIONS');
 		if (prefix === 'reset') return this.reset(message);
 		if (message.guild.settings.get('prefix') === prefix) throw message.language.get('CONFIGURATION_EQUALS');
-		await message.guild.settings.update('prefix', prefix);
+		await message.guild.settings.update('prefix', prefix, message.guild);
 		return message.success(`The prefix for this guild has been set to \`${prefix}\``);
 	}
 

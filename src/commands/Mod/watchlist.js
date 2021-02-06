@@ -35,7 +35,7 @@ module.exports = class extends Command {
 		const reason = _reason.length ? _reason.join(' ') : 'No reason provided';
 		const watchlist = message.guild.settings.get('watchlist');
 		if (this._exists(watchlist, user.id)) throw 'This user is already in the watchlist, perhaps you would like to remove the user or edit the user\'s entry.';
-		await message.guild.settings.update('watchlist', { priority, user: user.id, reason, moderator: message.author.id, left: false }, { guild: message.guild, arrayAction: 'add' });
+		await message.guild.settings.update('watchlist', { priority, user: user.id, reason, moderator: message.author.id, left: false }, message.guild, { action: 'add' });
 		this.client.emit('watchdog', message);
 		return message.sendEmbed({ color: 'GREEN', description: `Successfully added ${user} to the ${priority.toUpperCase()} priority watchlist.` });
 	}
@@ -46,7 +46,7 @@ module.exports = class extends Command {
 		const watchlist = message.guild.settings.get('watchlist');
 		if (!this._exists(watchlist, user.id)) throw 'This user is not on the watchlist.';
 		const entry = watchlist.find(data => data.user === user.id);
-		await message.guild.settings.update('watchlist', entry, { guild: message.guild, action: 'remove' });
+		await message.guild.settings.update('watchlist', entry, message.guild, { action: 'remove' });
 		this.client.emit('watchdog', message);
 		return message.sendEmbed({ color: 'GREEN', description: `Successfully removed ${user} from the watchlist.` });
 	}
@@ -64,7 +64,7 @@ module.exports = class extends Command {
 			if (!_reason.length) throw 'You did not include a new reason.';
 			entry.reason = _reason.join(' ');
 		}
-		await message.guild.settings.update('watchlist', entry, { guild: message.guild, arrayIndex: watchlist.indexOf(entry) });
+		await message.guild.settings.update('watchlist', entry, message.guild, { arrayPosition: watchlist.indexOf(entry) });
 		this.client.emit('watchdog', message);
 		return message.sendEmbed({ color: 'GREEN', description: `Successfully updated watchlist entry for ${user}` });
 	}
