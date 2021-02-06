@@ -11,7 +11,7 @@ module.exports = class extends Command {
 			permissionLevel: 6,
 			description: 'Manage the /r/ZeroTwo user watchlist.',
 			extendedHelp: 'No extended help available.',
-			usage: '<add|remove|edit|show> [user:user] [high|medium|low] [reason:string] [...]',
+			usage: '<add|remove|edit|show|refresh> [user:user] [high|medium|low] [reason:string] [...]',
 			usageDelim: ' ',
 			subcommands: true
 		});
@@ -35,7 +35,7 @@ module.exports = class extends Command {
 		const reason = _reason.length ? _reason.join(' ') : 'No reason provided';
 		const watchlist = message.guild.settings.get('watchlist');
 		if (this._exists(watchlist, user.id)) throw 'This user is already in the watchlist, perhaps you would like to remove the user or edit the user\'s entry.';
-		await message.guild.settings.update('watchlist', { priority, user: user.id, reason, moderator: message.author.id }, { guild: message.guild, arrayAction: 'add' });
+		await message.guild.settings.update('watchlist', { priority, user: user.id, reason, moderator: message.author.id, left: false }, { guild: message.guild, arrayAction: 'add' });
 		this.client.emit('watchdog', message);
 		return message.sendEmbed({ color: 'GREEN', description: `Successfully added ${user} to the ${priority.toUpperCase()} priority watchlist.` });
 	}
@@ -67,6 +67,11 @@ module.exports = class extends Command {
 		await message.guild.settings.update('watchlist', entry, { guild: message.guild, arrayIndex: watchlist.indexOf(entry) });
 		this.client.emit('watchdog', message);
 		return message.sendEmbed({ color: 'GREEN', description: `Successfully updated watchlist entry for ${user}` });
+	}
+
+	async refresh(message) {
+		await this.client.emit('watchdog', message);
+		return message.sendEmbed({ color: 'GREEN', description: 'Refreshed the watchlist.' });
 	}
 
 	_exists(array, target) {
