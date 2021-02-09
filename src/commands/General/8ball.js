@@ -1,6 +1,5 @@
-const answers = ['Yes', 'No', 'I doubt it.', `I don't think so..`, `It's a yes`, 'Perhaps', 'Never', 'Yep'];
-
 const { Command } = require('klasa');
+const { ANSWERS } = require('../../lib/util/constants');
 
 module.exports = class extends Command {
 
@@ -15,7 +14,7 @@ module.exports = class extends Command {
 	}
 
 	async run(message) {
-		return message.send(answers[Math.floor(Math.random() * answers.length)]);
+		return message.send(ANSWERS[Math.floor(Math.random() * ANSWERS.length)]);
 	}
 
 };
