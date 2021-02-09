@@ -31,8 +31,8 @@ class MusicPlayer {
 	 * @returns {MusicPlayer}
 	 */
 	async play() {
-		if (!this.voiceChannel) throw '<:xmark:415894324719386634>  ::  I am not in a voice channel.';
-		if (!this.player) throw '<:xmark:415894324719386634>  ::  I could not find a connection.';
+		if (!this.voiceChannelID) throw `I am not in a voice channel.`;
+		if (!this.player) throw `I could not find a connection.`;
 		if (!this.queue.length) throw 'No more songs left in the queue.';
 		const [song] = this.queue;
 		await this.player.play(song.track, { volume: this.volume });
@@ -185,8 +185,8 @@ class MusicPlayer {
 		return this.client.lavacord.players.get(this.guild.id) || null;
 	}
 
-	get voiceChannel() {
-		return this.guild.me.voice.channel || null;
+	get voiceChannelID() {
+		return this.guild.me ? this.guild.me.voice.channelID : null;
 	}
 
 }
