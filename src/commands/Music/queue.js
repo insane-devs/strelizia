@@ -1,4 +1,5 @@
 const { Command, util } = require('klasa');
+const { EMOTES: { cross, check, typing } } = require('../../lib/util/constants');
 
 module.exports = class extends Command {
 
@@ -22,12 +23,12 @@ module.exports = class extends Command {
 
 	async run(message, [page = 1]) {
 		const { music } = message.guild;
-		if (!message.member || !message.member.voice.channel) throw '<:xmark:415894324719386634>  ::  You must be in a voice channel';
-		if (!music.player) throw '<:xmark:415894324719386634>  ::  I am not currently playing any music in this server';
-		if (message.member.voice.channel.id !== music.voiceChannel.id) throw '<:xmark:415894324719386634>  ::  We should be on the same voice channel for you to do this!';
-		await message.send(`<a:typing:492356308943503370>  ::  Showing you the current queue`);
+		if (!message.member || !message.member.voice.channel) throw `${cross}  ::  You must be in a voice channel`;
+		if (!music.player) throw `${cross}  ::  I am not currently playing any music in this server`;
+		if (message.member.voice.channelID !== music.voiceChannelID) throw `${cross}  ::  We should be on the same voice channel for you to do this!`;
+		await message.send(`${typing}  ::  Showing you the current queue`);
 		const [np] = music.queue;
-		const _page = util.chunk(music.queue.slice(1, music.queue.length), 5);
+		const _page = util.chunk(music.queue.slice(1, music.queue.length), 7);
 		if (page > _page.length || page <= 0) throw `There is no page ${page}`;
 		return message.send([
 			`Current song queue for **${message.guild.name}** (Page ${page}/${_page.length})`,
@@ -41,31 +42,25 @@ module.exports = class extends Command {
 
 	async clear(message) {
 		const { music } = message.guild;
-		if (!message.member.roles.cache.has(message.guild.settings.get('roles.dj')) && message.member.voice.channel.members
-			.filter(member => !member.user.bot)
-			.some(member => member.roles.cache.has(message.guild.settings.get('roles.dj')))) throw '<:xmark:415894324719386634>  ::  There is a DJ in your music session, only DJs can use this command.';
 		const [first] = music.queue;
 		music.clearQueue();
 		music.queue.unshift(first);
-		return message.send('<:checkmark:415894323436191755>  ::  Successfully cleared the queue for this server');
+		return message.send(`${check}  ::  Successfully cleared the queue for this server`);
 	}
 
 	async remove(message, [number]) {
 		const { queue } = message.guild.music;
-		if (!message.member.roles.cache.has(message.guild.settings.get('roles.dj')) && message.member.voice.channel.members
-			.filter(member => !member.user.bot)
-			.some(member => member.roles.cache.has(message.guild.settings.get('roles.dj')))) throw '<:xmark:415894324719386634>  ::  There is a DJ in your music session, only DJs can use this command.';
 
 		if (!number) {
-			const msg = await message.prompt('<a:typing:492356308943503370>  ::  Please input the queue number that you want to delete.');
+			const msg = await message.prompt(`${typing}  ::  Please input the queue number that you want to delete.`);
 			number = Number(msg.content);
-			if (isNaN(number) || number <= 0) throw '<:xmark:415894324719386634>  ::  Invalid number. Exiting prompt';
+			if (isNaN(number) || number <= 0) throw `${cross}  ::  Invalid number. Exiting prompt`;
 		}
 
 		const item = queue[number];
-		if (!item) throw `<:xmark:415894324719386634>  ::  Sorry I can't find a track with a queue number \`${number}\`. Please run \`>queue\` again to see the whole complete list`;
+		if (!item) throw `${cross}  ::  Sorry I can't find a track with a queue number \`${number}\`. Please run \`>queue\` again to see the whole complete list`;
 		queue.splice(number, number);
-		return message.send(`<:checkmark:415894323436191755>  ::  Successfully removed **${item.info.title}** from the queue`);
+		return message.send(`${check}  ::  Successfully removed **${item.info.title}** from the queue`);
 	}
 
 };
