@@ -7,7 +7,7 @@ module.exports = class extends Command {
 			enabled: true,
 			runIn: ['text', 'dm', 'group'],
 			aliases: ['tp'],
-			permissionLevel: 10,
+			permissionLevel: 6,
 			description: 'Force post today\'s event top posters.',
 			extendedHelp: 'No extended help available.'
 		});
