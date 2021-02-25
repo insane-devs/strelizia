@@ -54,12 +54,11 @@ class MusicPlayer {
 
 	/**
 	 * Skips through current track and plays the next track
-	 * @returns {MusicPlayer}
+	 * @returns {void}
 	 */
 	skip() {
-		if (!this.player) return null;
-		this.queue.shift();
-		return this;
+		if (!this.player) return;
+		else this.queue.shift();
 	}
 
 	/**
