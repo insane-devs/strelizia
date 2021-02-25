@@ -43,8 +43,28 @@ module.exports = class extends Command {
 			music.queue.push(song);
 		}
 
+		if (!music.player) await this.join(music, message.member.voice.channelID);
 		if (music.player.playing) return null;
 		return this.play(music);
+	}
+
+	async join(musicManager, id) {
+		const player = await musicManager.join(id);
+		const [song] = musicManager.queue;
+
+		player.on('end', async data => {
+			if (data.reason === 'REPLACED') return;
+			if (song.info.isStream) return;
+
+			musicManager.skip();
+			await this.play(musicManager);
+		}).on('error', async data => {
+			await musicManager.textChannel.send(`Something went wrong playing that song, ${data.reason || data.error}`);
+			musicManager.skip();
+			await this.play(musicManager);
+		});
+
+		return player;
 	}
 
 	async play(musicManager) {
@@ -61,22 +81,10 @@ module.exports = class extends Command {
 
 		await sleep(300);
 
-		const player = await musicManager.play();
+		await musicManager.play();
 		await musicManager.textChannel.send(`Now playing: **${song.info.title}** by __${song.info.author}__`);
 
-		player.once('end', async data => {
-			if (data.reason === 'REPLACED') return;
-			if (song.info.isStream) return;
-
-			musicManager.skip();
-			await this.play(musicManager);
-		}).once('error', async data => {
-			await musicManager.textChannel.send(`Something went wrong playing that song, ${data.reason || data.error}`);
-			musicManager.skip();
-			await this.play(musicManager);
-		});
-
-		return player;
+		return musicManager.player;
 	}
 
 };
