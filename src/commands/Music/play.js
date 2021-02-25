@@ -22,8 +22,6 @@ module.exports = class extends Command {
 		if (!message.member.voice.channel.permissionsFor(message.guild.me).serialize().CONNECT) throw `${cross}  ::  I do not have the correct permissions to join that channel`;
 		if (!message.member.voice.channel.permissionsFor(message.guild.me).serialize().SPEAK) throw `${cross}  ::  Please allow me to speak in this channel so that I can play music`;
 
-		if (!music.player) music.join(message.member.voice.channelID);
-
 		if (music.player && message.member.voice.channelID !== music.voiceChannelID) throw `${cross}  ::  We should be on the same voice channel for you to do this.`;
 
 		const song = await music.handleSong(track);
