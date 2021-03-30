@@ -10,7 +10,7 @@ module.exports = class extends Event {
 			type: 22
 		})).entries
 			.sort((a, b) => b.createdTimestamp - a.createdTimestamp)
-			.find(data => data.target === user);
+			.find(data => data.target.id === user.id);
 
 		if (auditData) {
 			const { executor, reason } = auditData;
@@ -22,14 +22,6 @@ module.exports = class extends Event {
 				.addField('User', user.tag)
 				.addField('Banned by:', executor.tag, true)
 				.addField('Reason', reason || 'None', true)
-				.setColor('RED')
-				.setFooter(`Joined Discord: ${Duration.toNow(user.createdTimestamp)} ago`)
-				.setTimestamp()).catch(console.error);
-		} else {
-			await this.client.channels.cache.get('573122270646501376').send(new MessageEmbed()
-				.setAuthor('🚨 Member Banned', user.displayAvatarURL())
-				.setDescription(`**ID**: ${user.id}`)
-				.addField('User', user.tag)
 				.setColor('RED')
 				.setFooter(`Joined Discord: ${Duration.toNow(user.createdTimestamp)} ago`)
 				.setTimestamp()).catch(console.error);
