@@ -7,7 +7,7 @@ module.exports = class extends Command {
 			enabled: true,
 			runIn: ['text', 'dm', 'group'],
 			aliases: ['ue'],
-			permissionLevel: 10,
+			permissionLevel: 6,
 			description: 'Changes the message ID to use when sending the event top posters.',
 			extendedHelp: 'No extended help available.',
 			usage: '<ID:string{16,18}>'
