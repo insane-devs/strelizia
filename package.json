@@ -1,13 +1,13 @@
 {
-  "name": "hayasaka",
+  "name": "strelizia",
   "version": "1.1.0",
   "description": "A private Discord bot designed to help manage the events of the /r/ZeroTwo subreddit's Discord server.",
   "main": "src/app.js",
   "scripts": {
-    "start": "pm2 start src/app.js --name hayasaka --node-args='--expose-gc'",
+    "start": "pm2 start src/app.js --name strelizia --node-args='--expose-gc'",
     "update": "yarn update",
     "build": "eslint src/",
-    "restart": "pm2 restart hayasaka"
+    "restart": "pm2 restart strelizia"
   },
   "engines": {
     "node": ">=13.6.0"
@@ -16,7 +16,7 @@
   "dependencies": {
     "@lavacord/discord.js": "^0.0.7",
     "discord.js": "github:discordjs/discord.js",
-    "klasa": "^0.5.0",
+    "klasa": "thefloppybanana/klasa#v0.5.1",
     "node-fetch": "^2.3.0"
   },
   "devDependencies": {
