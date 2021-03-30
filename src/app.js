@@ -1,7 +1,7 @@
-const HayasakaClient = require('./lib/structures/HayasakaClient');
+const StreliziaClient = require('./lib/structures/StreliziaClient');
 const { token, prefix } = require('../config');
 
-new HayasakaClient({
+new StreliziaClient({
 	commandEditing: true,
 	commandLogging: true,
 	console: {
