@@ -2,10 +2,6 @@ const { Task, util: { codeBlock } } = require('klasa');
 
 module.exports = class extends Task {
 
-	constructor(...args) {
-		super(...args, { enabled: true });
-	}
-
 	async run({ guild, force = false }) {
 		if (!this.client.settings.get('eventID')) return null;
 		const _guild = this.client.guilds.cache.get(guild);
@@ -47,7 +43,7 @@ module.exports = class extends Task {
 				messages.length = 0;
 				sorted.length = 0;
 			})
-			.catch(err => err);
+			.catch(console.error);
 	}
 
 };
