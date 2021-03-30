@@ -119,7 +119,7 @@ module.exports = class extends Language {
 			COMMAND_PINGPONG: (diff, ping) => `Pong! (Roundtrip took: ${diff}ms. Heartbeat: ${ping}ms.)`,
 			COMMAND_INVITE: () => 'Sorry, you cannot invite me somewhere else at the moment.',
 			COMMAND_INVITE_DESCRIPTION: 'Displays the invite link of the bot, to invite it to your guild.',
-			COMMAND_INFO: 'Hi! I am Hayasaka Ai, a bot designed to help Nana with daily events in the r/ZeroTwo server because Nana is lazy most of the time.',
+			COMMAND_INFO: 'Hi! I am Strelizia, a bot designed to help Nana with daily events in the r/ZeroTwo server because Nana is lazy most of the time.',
 			COMMAND_INFO_DESCRIPTION: 'What am I for?',
 			COMMAND_HELP_DESCRIPTION: 'Display help for a command.',
 			COMMAND_HELP_NO_EXTENDED: 'No extended help available.',
