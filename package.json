@@ -9,6 +9,11 @@
     "build": "eslint src/",
     "restart": "pm2 restart strelizia"
   },
+  "_moduleAliases": {
+    "#lib": "./src/lib/",
+    "#root": ".",
+    "#util": "./src/lib/util/"
+  },
   "engines": {
     "node": ">=13.6.0"
   },

@@ -1,5 +1,6 @@
-const StreliziaClient = require('./lib/structures/StreliziaClient');
-const { token, prefix } = require('../config');
+require('module-alias/register');
+const StreliziaClient = require('#lib/structures/StreliziaClient');
+const { token, prefix } = require('#root/config');
 
 new StreliziaClient({
 	commandEditing: true,
