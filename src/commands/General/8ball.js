@@ -1,5 +1,5 @@
 const { Command } = require('klasa');
-const { ANSWERS } = require('../../lib/util/constants');
+const { ANSWERS } = require('#util/constants');
 
 module.exports = class extends Command {
 

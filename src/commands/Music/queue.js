@@ -1,5 +1,5 @@
 const { Command, util } = require('klasa');
-const { EMOTES: { cross, check, typing } } = require('../../lib/util/constants');
+const { EMOTES: { cross, check, typing } } = require('#util/constants');
 
 module.exports = class extends Command {
 
