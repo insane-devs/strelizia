@@ -5,10 +5,11 @@ module.exports = class extends Event {
 
 	async run(message) {
 		const { watchdog: { channel, messageID: id }, watchlist } = message.guild.settings;
-		const textChannel = await message.guild.channels.cache.get(channel);
+		const textChannel = message.guild.channels.cache.get(channel);
 
 		if (!(channel || textChannel)) return;
 
+		// Move users to the bottom who have left/was banned.
 		watchlist.forEach(async (data) => message.guild.members.fetch(data.user)
 			.catch(async () => {
 				data.left = true;
@@ -32,10 +33,11 @@ module.exports = class extends Event {
 			.addField('<:online:415894324652277762> **Low Priority**', this._filterByPriority(watchlistData, 'low'))
 			.setColor('RED')
 			.setTimestamp();
-		if (this._filterLeftMembers(watchlistData).length) embed.addField('**Members who left/were banned**', this._filterLeftMembers(watchlistData).join('\n'));
+		if (this._filterLeftMembers(watchlistData).length) embed.addField('**Members who left/were banned**', this._filterLeftMembers(watchlistData));
 		return embed;
 	}
 
+	// Filter watchlist array according to priority.
 	_filterByPriority(array, priority) {
 		const filtered = array.filter((data) => !data.left && data.priority === priority);
 		return filtered.length ?
@@ -43,10 +45,12 @@ module.exports = class extends Event {
 			'Empty';
 	}
 
+	// Filter members who aren't in the server anymore.
 	_filterLeftMembers(array) {
 		return array
 			.filter(data => data.left)
-			.map(({ user, reason, moderator }) => `• <@${user}> ─ ${reason} (<@${moderator}>)`);
+			.map(({ user, reason, moderator }) => `• <@${user}> ─ ${reason} (<@${moderator}>)`)
+			.join('\n');
 	}
 
 };
