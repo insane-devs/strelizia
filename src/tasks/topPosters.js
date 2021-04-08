@@ -23,9 +23,11 @@ module.exports = class extends Task {
 			} catch (err) { break; }
 		}
 
+		messages.push(await eventChannel.messages.fetch(this.client.settings.get('eventID'), false));
+
 		const index = messages.sort((a, b) => b.createdTimestamp - a.createdTimestamp).findIndex(msg => msg.id === lastPostID);
 
-		if (lastID < lastPostID && (!force && index < 50)) return null;
+		if (!force && index < 50) return null;
 
 		messages.filter(msg => msg.attachments.size).forEach(msgs => {
 			totalImages += msgs.attachments.size;
