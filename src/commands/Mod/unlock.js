@@ -6,6 +6,7 @@ module.exports = class extends Command {
 	constructor(...args) {
 		super(...args, {
 			runIn: ['text'],
+			requiredPermissions: ['MANAGE_ROLES'],
 			permissionLevel: 6,
 			description: 'Unlocks and allows everyone to speak in the whole server.',
 			extendedHelp: 'No extended help available.',

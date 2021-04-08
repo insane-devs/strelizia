@@ -6,6 +6,7 @@ module.exports = class extends Command {
 	constructor(...args) {
 		super(...args, {
 			runIn: ['text'],
+			requiredPermissions: ['MANAGE_ROLES'],
 			permissionLevel: 6,
 			description: 'Locks and prevent everyone from speaking in the whole server.',
 			extendedHelp: 'This command denies Send Messages permissions from everyone, useful for spam raids.',
