@@ -1,6 +1,6 @@
 {
   "name": "strelizia",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "A private Discord bot designed to help manage the events of the /r/ZeroTwo subreddit's Discord server.",
   "main": "src/app.js",
   "scripts": {
