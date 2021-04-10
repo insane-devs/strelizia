@@ -27,7 +27,7 @@ module.exports = class extends Task {
 
 		const index = messages.sort((a, b) => b.createdTimestamp - a.createdTimestamp).findIndex(msg => msg.id === lastPostID);
 
-		if (!force && index < 50) return null;
+		if (!force && index < 50 && index !== -1) return null;
 
 		messages.filter(msg => msg.attachments.size).forEach(msgs => {
 			totalImages += msgs.attachments.size;
@@ -35,7 +35,7 @@ module.exports = class extends Task {
 			else obj[msgs.author.tag] += msgs.attachments.size;
 		});
 
-		const sorted = Object.entries(obj).filter(ent => ent[1] >= 2).sort((a, b) => b[1] - a[1]).map(data => `• ${data[0]}${''.padStart(40 - data[0].length, ' ')}:: ${data[1]} images`);
+		const sorted = Object.entries(obj).filter(ent => ent[1] >= 10).sort((a, b) => b[1] - a[1]).map(data => `• ${data[0]}${''.padStart(40 - data[0].length, ' ')}:: ${data[1]} images`);
 
 		await this.client.users.cache.get('296862433136476160').send(`Successfully sent message in ${eventChannel}`);
 
