@@ -23,7 +23,7 @@ module.exports = class extends Monitor {
 	async run(message) {
 		if (!message.guild ||
 			message.guild.id !== '508495069914071040' ||
-			message.channel.id !== '534138604281266195') return null;
+			message.channel.id !== '815308859580874762') return null;
 		if (!new RegExp(days.join('|')).test(message.content)) return null;
 		if (/\b(nsfw|dick|pussy|naked)\b|(loli|tit)/.test(message.content)) return message.react(no);
 		for (const emote of REACTIONS) {
