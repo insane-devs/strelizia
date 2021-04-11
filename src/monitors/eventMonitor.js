@@ -26,10 +26,7 @@ module.exports = class extends Monitor {
 			message.channel.id !== '815308859580874762') return null;
 		if (!new RegExp(days.join('|')).test(message.content)) return null;
 		if (/\b(nsfw|dick|pussy|naked)\b|(loli|tit)/.test(message.content)) return message.react(no);
-		for (const emote of REACTIONS) {
-			await message.react(emote);
-		}
-		return null;
+		return Promise.all(REACTIONS.map(async emote => await message.react(emote)));
 	}
 
 };
