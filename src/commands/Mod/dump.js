@@ -49,7 +49,7 @@ module.exports = class extends Command {
 		}
 
 		if (ids.join(', ').length >= 1000) {
-			const chunked = chunk(ids, 25);
+			const chunked = chunk(ids, 20);
 			chunked.forEach(arr => embed
 				.addField('\u200b', arr.join(', '))
 				.addField('\u200b', arr.map(id => `<@${id}>`).join(', ')));
