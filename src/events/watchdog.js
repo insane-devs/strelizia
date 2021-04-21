@@ -1,5 +1,12 @@
 const { MessageEmbed } = require('discord.js');
-const { Event } = require('klasa');
+const { Event, util: { chunk } } = require('klasa');
+
+const titles = {
+	high:	'<:dnd:415894324522254338> **High Priority**',
+	medium:	'<:idle:415894324610596865> **Medium Priority**',
+	low:	'<:online:415894324652277762> **Low Priority**',
+	left:	'**Members who left/were banned**'
+};
 
 module.exports = class extends Event {
 
@@ -28,12 +35,36 @@ module.exports = class extends Event {
 	buildEmbed(message, watchlistData) {
 		const embed = new MessageEmbed()
 			.setAuthor(`${message.guild} watchlist`, message.guild.iconURL({ dynamic: true }))
-			.addField('<:dnd:415894324522254338> **High Priority**', this._filterByPriority(watchlistData, 'high'))
-			.addField('<:idle:415894324610596865> **Medium Priority**', this._filterByPriority(watchlistData, 'medium'))
-			.addField('<:online:415894324652277762> **Low Priority**', this._filterByPriority(watchlistData, 'low'))
 			.setColor('RED')
 			.setTimestamp();
-		if (this._filterLeftMembers(watchlistData).length) embed.addField('**Members who left/were banned**', this._filterLeftMembers(watchlistData));
+
+		['high', 'medium', 'low'].map(priority => this.addFields(embed, this._filterByPriority(watchlistData, priority), priority));
+
+		const leftMembers = this._filterLeftMembers(watchlistData);
+
+		if (leftMembers.length) {
+			this.addFields(embed, leftMembers, 'left');
+		}
+
+		return embed;
+	}
+
+	// Create a function that splits the text into multiple fields, preventing character limits
+	addFields(embed, str, priority) {
+		if (str.length > 1028) {
+			const chunks = chunk(str.split('\n'), 5);
+
+			for (let i = 0; i < chunks.length; i++) {
+				if (i === 0) {
+					embed.addField(titles[priority], chunks[i]);
+				} else {
+					embed.addField('\u200b', chunks[i]);
+				}
+			}
+		} else {
+			embed.addField(titles[priority], str);
+		}
+
 		return embed;
 	}
 
