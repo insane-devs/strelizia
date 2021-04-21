@@ -55,11 +55,8 @@ module.exports = class extends Event {
 			const chunks = chunk(str.split('\n'), 5);
 
 			for (let i = 0; i < chunks.length; i++) {
-				if (i === 0) {
-					embed.addField(titles[priority], chunks[i]);
-				} else {
-					embed.addField('\u200b', chunks[i]);
-				}
+				if (i === 0) embed.addField(titles[priority], chunks[i]);
+				embed.addField('\u200b', chunks[i]);
 			}
 		} else {
 			embed.addField(titles[priority], str);
