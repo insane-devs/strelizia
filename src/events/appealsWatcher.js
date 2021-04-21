@@ -22,7 +22,8 @@ module.exports = class extends Event {
 		const embed = new MessageEmbed()
 			.setAuthor(`Appeals for ${message.guild}`, message.guild.iconURL({ dynamic: true }))
 			.setColor('BLUE')
-			.setDescription(appealList.map(({ user, notes }) => `• <@!${user}> | ${notes}`).join('\n'));
+			.setDescription(appealList.map(({ user, notes }) => `• <@!${user}> | ${notes}`).join('\n'))
+			.setTimestamp();
 
 		return embed;
 	}
