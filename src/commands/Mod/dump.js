@@ -61,12 +61,20 @@ module.exports = class extends Command {
 
 		if (embed.length > 6000 || embed.fields > 6) {
 			const fields = chunk(embed.fields, 6);
-			return fields.forEach(arr => message.channel.send(`${filtered.size} members who joined ${toNow(duration)} ago.`, new MessageEmbed()
-				.setColor('RANDOM')
-				.addFields(arr)));
-		}
 
-		return message.send(embed.setFooter(`Took: ${stopwatch}`));
+			for (let i = 0; i < fields.length; i++) {
+				const emb = new MessageEmbed()
+					.setColor('RANDOM');
+
+				if (i === 0) emb.setTitle(`${filtered.size} members who joined ${toNow(duration)} ago.`);
+				if (i === fields.length - 1) emb.setFooter(`Took: ${stopwatch}`);
+				emb.addFields(fields[i]);
+
+				message.channel.send(emb);
+			}
+		} else {
+			message.send(embed.setFooter(`Took: ${stopwatch}`));
+		}
 	}
 
 };
