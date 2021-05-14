@@ -5,6 +5,7 @@ Client.defaultGuildSchema
 	.add('prefix', 'string', { default: prefix })
 	.add('raidmode', 'boolean', { default: false })
 	.add('watchlist', 'any', { default: [], array: true })
+	.add('customs', 'any', { default: [], array: true })
 	.add('appeals', folder => folder
 		.add('list', 'any', { default: [], array: true })
 		.add('channel', 'textchannel', { default: null })
