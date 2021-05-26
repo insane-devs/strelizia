@@ -11,7 +11,7 @@ module.exports = class extends Command {
 			permissionLevel: 6,
 			description: 'Happy Birthday!',
 			extendedHelp: 'No extended help available.',
-			usage: '[list|remove] <Member:member>',
+			usage: '[list|remove] [Member:member]',
 			usageDelim: ' ',
 			subcommands: true
 		});
