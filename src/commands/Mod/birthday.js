@@ -42,7 +42,7 @@ module.exports = class extends Command {
 
 		return message.send(new MessageEmbed()
 			.setColor('PINK')
-			.setTitles(`Birthdays in ${message.guild.name}`)
+			.setTitle(`Birthdays in ${message.guild.name}`)
 			.setDescription(tasks.map(entry => `<@!${entry.id}> (${toNow(entry.time)})`)));
 	}
 
