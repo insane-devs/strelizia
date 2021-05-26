@@ -41,9 +41,9 @@ module.exports = class extends Command {
 		if (!tasks.length) throw `${cross}  ::  There aren't any active birtdays at the moment.`;
 
 		return message.send(new MessageEmbed()
-			.setColor('PINK')
+			.setColor('GREEN')
 			.setTitle(`Birthdays in ${message.guild.name}`)
-			.setDescription(tasks.map(entry => `<@!${entry.id}> (${toNow(entry.time)})`)));
+			.setDescription(tasks.map(entry => `<@!${entry.data.id}> (${toNow(entry.time)})`)));
 	}
 
 	async remove(message, [member]) {
