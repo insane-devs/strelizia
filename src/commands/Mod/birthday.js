@@ -18,6 +18,7 @@ module.exports = class extends Command {
 	}
 
 	async run(message, [member]) {
+		if (!member) throw `${cross}  ::  Member is a required argument.`;
 		const entry = this.client.schedule.tasks.some(task => task.taskName === 'hbd' && task.data.id === member.id);
 		if (entry) throw `${cross}  ::  This member is already added into the database.`;
 
@@ -46,6 +47,7 @@ module.exports = class extends Command {
 	}
 
 	async remove(message, [member]) {
+		if (!member) throw `${cross}  ::  Member is a required argument.`;
 		const entry = this.client.schedule.tasks.find(task => task.taskName === 'hbd' && task.data.id === member.id);
 
 		await member.roles.remove('789359547387084840')
