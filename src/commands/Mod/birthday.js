@@ -26,7 +26,7 @@ module.exports = class extends Command {
 			.catch(() => {
 				throw `${cross}  ::  Something went wrong while giving that member a role, please try again.`;
 			});
-		await this.client.schedule.create('hbd', 1000 * 60 * 60 * 24, {
+		await this.client.schedule.create('hbd', Date.now() + (1000 * 60 * 60 * 24), {
 			data: {
 				guildID: message.guild.id,
 				id: member.id
