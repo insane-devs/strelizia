@@ -37,7 +37,7 @@ module.exports = class extends Command {
 	}
 
 	async list(message) {
-		const tasks = this.client.tasks.filter(task => task.taskName === 'hbd');
+		const tasks = this.client.schedule.tasks.filter(task => task.taskName === 'hbd');
 		if (!tasks.length) throw `${cross}  ::  There aren't any active birtdays at the moment.`;
 
 		return message.send(new MessageEmbed()
