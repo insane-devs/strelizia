@@ -32,7 +32,7 @@ module.exports = class extends Task {
 		// eslint-disable-next-line no-constant-condition
 		while (true) {
 			try {
-				options.after = lastPostID || this.lb.lastID || eventID;
+				options.after = this.lb.lastID || eventID;
 				const msgs = await eventChannel.messages.fetch(options, false);
 				this.lb.messages.push(...msgs.array());
 				this.lb.lastID = msgs.first().id;
@@ -45,7 +45,7 @@ module.exports = class extends Task {
 
 		// Reset message array if index didn't exceed 50
 		if (!force && index < 50 && index !== -1) {
-			this.lb.messages = [];
+			this.lb.messages = [await eventChannel.messages.fetch(lastPostID, false)];
 			return null;
 		}
 
