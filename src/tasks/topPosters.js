@@ -32,18 +32,22 @@ module.exports = class extends Task {
 		// eslint-disable-next-line no-constant-condition
 		while (true) {
 			try {
-				options.after = this.lb.lastID || eventID;
+				options.after = lastPostID || this.lb.lastID || eventID;
 				const msgs = await eventChannel.messages.fetch(options, false);
 				this.lb.messages.push(...msgs.array());
 				this.lb.lastID = msgs.first().id;
 			} catch (err) { break; }
 		}
 
-		this.lb.messages.push(await eventChannel.messages.fetch(this.client.settings.get('eventID'), false));
+		// this.lb.messages.push(await eventChannel.messages.fetch(this.client.settings.get('eventID'), false));
 
 		const index = this.lb.messages.sort((a, b) => b.createdTimestamp - a.createdTimestamp).findIndex(msg => msg.id === lastPostID);
 
-		if (!force && index < 50 && index !== -1) return null;
+		// Reset message array if index didn't exceed 50
+		if (!force && index < 50 && index !== -1) {
+			this.lb.messages = [];
+			return null;
+		}
 
 		this.lb.messages.filter(msg => msg.attachments.size).forEach(msgs => {
 			this.lb.totalImages += msgs.attachments.size;
