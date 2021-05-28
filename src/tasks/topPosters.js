@@ -46,6 +46,7 @@ module.exports = class extends Task {
 		// Reset message array if index didn't exceed 50
 		if (!force && index < 50 && index !== -1) {
 			this.lb.messages = [await eventChannel.messages.fetch(lastPostID, false)];
+			this.lb.lastID = lastPostID;
 			return null;
 		}
 
