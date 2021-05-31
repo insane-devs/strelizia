@@ -4,6 +4,7 @@ module.exports = class extends Task {
 
 	constructor(...args) {
 		super(...args);
+
 		this.lb = {
 			eventID: '',
 			lastID: '',
@@ -52,8 +53,8 @@ module.exports = class extends Task {
 
 		this.lb.messages.filter(msg => msg.attachments.size).forEach(msgs => {
 			this.lb.totalImages += msgs.attachments.size;
-			if (!this.lb.posters[msgs.author.id]) this.lb.posters[msgs.author.id] = msgs.attachments.size;
-			else this.lb.posters[msgs.author.id] += msgs.attachments.size;
+			if (!this.lb.posters[msgs.author.id]) this.lb.posters[msgs.author.id] = 0;
+			this.lb.posters[msgs.author.id] += msgs.attachments.size;
 		});
 
 		const sorted = await Promise.all(Object.entries(this.lb.posters).filter(ent => ent[1] >= 15).sort((a, b) => b[1] - a[1]).map(async data => {
