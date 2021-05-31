@@ -42,10 +42,10 @@ module.exports = class extends Task {
 
 		// this.lb.messages.push(await eventChannel.messages.fetch(this.client.settings.get('eventID'), false));
 
-		const index = this.lb.messages.sort((a, b) => b.createdTimestamp - a.createdTimestamp).findIndex(msg => msg.id === lastPostID);
+		// const index = this.lb.messages.sort((a, b) => b.createdTimestamp - a.createdTimestamp).findIndex(msg => msg.id === lastPostID);
 
 		// Reset message array if index didn't exceed 50
-		if (!force && index < 50 && index !== -1) {
+		if (!force && this.lb.messages.length < 50) {
 			this.lb.messages = [await eventChannel.messages.fetch(lastPostID, false)];
 			this.lb.lastID = lastPostID;
 			return null;
