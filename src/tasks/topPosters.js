@@ -51,11 +51,17 @@ module.exports = class extends Task {
 			return null;
 		}
 
-		this.lb.messages.filter(msg => msg.attachments.size).forEach(msgs => {
+		for (const { author, attachments } of this.lb.messages.filter(_msg => _msg.attachments.size())) {
+			this.lb.totalImages += attachments.size;
+			if (!this.lb.posters[author.id]) this.lb.posters[author.id] = 0;
+			this.lb.posters[author.id] += attachments.size;
+		}
+
+		/* this.lb.messages.filter(msg => msg.attachments.size).forEach(msgs => {
 			this.lb.totalImages += msgs.attachments.size;
 			if (!this.lb.posters[msgs.author.id]) this.lb.posters[msgs.author.id] = 0;
 			this.lb.posters[msgs.author.id] += msgs.attachments.size;
-		});
+		}); */
 
 		const sorted = await Promise.all(Object.entries(this.lb.posters).filter(ent => ent[1] >= 15).sort((a, b) => b[1] - a[1]).map(async data => {
 			const user = (await this.client.users.fetch(data[0], false)).tag;
