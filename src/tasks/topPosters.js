@@ -51,7 +51,7 @@ module.exports = class extends Task {
 			return null;
 		}
 
-		for (const { author, attachments } of this.lb.messages.filter(_msg => _msg.attachments.size())) {
+		for (const { author, attachments } of this.lb.messages.filter(_msg => _msg.attachments.size)) {
 			this.lb.totalImages += attachments.size;
 			if (!this.lb.posters[author.id]) this.lb.posters[author.id] = 0;
 			this.lb.posters[author.id] += attachments.size;
