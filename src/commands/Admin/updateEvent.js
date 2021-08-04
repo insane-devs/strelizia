@@ -17,7 +17,7 @@ module.exports = class extends Command {
 	async run(message, [id]) {
 		await this.client.settings.update('eventID', id);
 		// Reset topPosters leaderboard before running the command
-		this.client.tasks.get('topPosters')._reset();
+		// this.client.tasks.get('topPosters')._reset();
 
 		return message.success(`Changed message ID to \`${id}\``);
 	}
