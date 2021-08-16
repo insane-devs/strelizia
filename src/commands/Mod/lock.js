@@ -18,7 +18,7 @@ module.exports = class extends Command {
 		if (message.guild.id !== '508495069914071040') return null;
 		const everyone = message.guild.roles.cache.get(message.guild.id);
 		if (!everyone.permissions.serialize().SEND_MESSAGES) throw `${cross}  ::  The server is currently locked.`;
-		await everyone.setPermissions('SEND_MESSAGE', 'Strelizia lock command.');
+		await everyone.setPermissions('SEND_MESSAGES', 'Strelizia lock command.');
 		return message.send(`🔒  ::  Successfully locked the server`);
 	}
 
