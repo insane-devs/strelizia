@@ -5,6 +5,7 @@ module.exports = class extends Command {
 
 	constructor(...args) {
 		super(...args, {
+			enabled: false,
 			runIn: ['text'],
 			requiredPermissions: ['MANAGE_ROLES'],
 			permissionLevel: 6,
