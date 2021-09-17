@@ -37,7 +37,7 @@ module.exports = class extends Task {
 
 		const sorted = Object.entries(obj).filter(ent => ent[1] >= 10).sort((a, b) => b[1] - a[1]).map(data => `• ${data[0]}${''.padStart(40 - data[0].length, ' ')}:: ${data[1]} images`);
 
-		(await this.client.users.cache.fetch('296862433136476160')).send(`Successfully sent message in ${eventChannel}`);
+		(await this.client.users.fetch('296862433136476160')).send(`Successfully sent message in ${eventChannel}`);
 
 		return eventChannel.send(`**Top Daily Posters in ${eventChannel}**\n\n*Total images posted: ${totalImages}*${codeBlock('asciidoc', sorted.join('\n'))}`)
 			.then(async (msg) => {
