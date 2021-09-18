@@ -11,7 +11,7 @@ module.exports = class extends Command {
 			permissionLevel: 6,
 			description: 'Manage the /r/ZeroTwo user watchlist.',
 			extendedHelp: 'No extended help available.',
-			usage: '<add|remove|edit|show|refresh> [user:user] [high|medium|low] [reason:string] [...]',
+			usage: '<add|rem|edit|show|refresh> [user:user] [high|medium|low] [reason:string] [...]',
 			usageDelim: ' ',
 			subcommands: true
 		});
@@ -51,7 +51,7 @@ module.exports = class extends Command {
 		});
 	}
 
-	async remove(message, [user]) {
+	async rem(message, [user]) {
 		if (!user) throw 'Who do I remove?';
 
 		const watchlist = message.guild.settings.get('watchlist');

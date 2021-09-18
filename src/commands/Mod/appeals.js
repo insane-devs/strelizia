@@ -10,7 +10,7 @@ module.exports = class extends Command {
 			permissionLevel: 6,
 			description: 'Manage /r/ZeroTwo ban appeals.',
 			extendedHelp: 'No extended help available.',
-			usage: '<add|edit|remove> <User:user> [Note:string] [...]',
+			usage: '<add|edit|rem> <User:user> [Note:string] [...]',
 			usageDelim: ' ',
 			subcommands: true
 		});
@@ -45,7 +45,7 @@ module.exports = class extends Command {
 		return message.send(`${check}  ::  Successfully edited the notes for this user.`);
 	}
 
-	async remove(message, [user]) {
+	async rem(message, [user]) {
 		const appeals = message.guild.settings.get('appeals.list');
 		const entry = appeals.find(({ user: userID }) => userID === user.id);
 
