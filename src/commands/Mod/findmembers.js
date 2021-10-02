@@ -1,4 +1,4 @@
-const { Command, util: { chunk }, RichDisplay } = require('klasa');
+const { Command, util: { chunk }, RichDisplay, Stopwatch } = require('klasa');
 const { EMOTES: { typing, cross } } = require('#util/constants');
 const { MessageEmbed } = require('discord.js');
 
@@ -18,6 +18,8 @@ module.exports = class extends Command {
 		await message.send(`${typing}  ::  Attemping to fetch members...`);
 		const { guild } = message;
 
+		const stopwatch = new Stopwatch();
+
 		if (role.id === message.guild.id) throw `${cross}  ::  Use the **membercount** command to view the total number of members in this server.`;
 
 		const members = await guild.members.fetch();
@@ -27,7 +29,8 @@ module.exports = class extends Command {
 
 		const display = new RichDisplay(new MessageEmbed()
 			.setColor('#f84859')
-			.setAuthor(`All members with the ${role.name} role | Count: ${filteredMembers.length}`, message.guild.iconURL()));
+			.setAuthor(`All members with the ${role.name} role | Count: ${filteredMembers.length}`, message.guild.iconURL())
+			.setFooter(`Finished in ${stopwatch}`));
 
 		// Check of filteredMembers size is not more than 20, otherwise chunk by 20
 		if (filteredMembers.length > 20) {
@@ -41,7 +44,8 @@ module.exports = class extends Command {
 			return message.send(new MessageEmbed()
 				.setColor('#f84859')
 				.setAuthor(`All members with the ${role.name} role | Count: ${filteredMembers.length}`, message.guild.iconURL())
-				.setDescription(filteredMembers.map(id => `<@${id}>`)));
+				.setDescription(filteredMembers.map(id => `<@${id}>`))
+				.setFooter(`Finished in ${stopwatch}`));
 		}
 	}
 
