@@ -23,7 +23,7 @@
     "discord.js": "github:discordjs/discord.js",
     "klasa": "thefloppybanana/klasa#v0.5.1",
     "module-alias": "^2.2.2",
-    "node-fetch": "^2.3.0"
+    "node-fetch": "^3.1.1"
   },
   "devDependencies": {
     "eslint": "^5.11.1",
