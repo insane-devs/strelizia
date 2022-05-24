@@ -1,0 +1,75 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+type ClientStorageSchedules {
+  catchUp  Boolean
+  data     ClientStorageSchedulesData
+  id       String
+  repeat   String
+  taskName String
+  time     Float
+}
+
+type ClientStorageSchedulesData {
+  guild String?
+}
+
+type GuildsAppeals {
+  channel   String
+  list      GuildsAppealsList[]
+  messageID String
+}
+
+type GuildsAppealsList {
+  moderator String
+  notes     String
+  user      String
+}
+
+type GuildsCustoms {
+  id     String?
+  roleID String?
+}
+
+type GuildsWatchdog {
+  channel   String
+  messageID String
+}
+
+type GuildsWatchlist {
+  left      Boolean
+  moderator String
+  priority  String
+  reason    String
+  user      String
+}
+
+model clientStorage {
+  id_                 String                   @id @default(auto()) @map("_id") @db.ObjectId
+  eventID             String
+  id                  String                  
+  lastLeaderboardPost String
+  schedules           ClientStorageSchedules[]
+  triggerWords        String[]
+}
+
+model guilds {
+  id_       String            @id @default(auto()) @map("_id") @db.ObjectId
+  appeals   GuildsAppeals?
+  customs   GuildsCustoms[]
+  id        String
+  prefix    String?
+  raidmode  Boolean?
+  watchdog  GuildsWatchdog?
+  watchlist GuildsWatchlist[]
+}
+
+model users {
+  id_ String @id @default(auto()) @map("_id") @db.ObjectId
+}
