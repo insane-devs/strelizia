@@ -12,7 +12,6 @@ import { codeBlock } from '@discordjs/builders';
 })
 export class UserCommand extends SubCommandPluginCommand {
 	public async chatInputRun(interaction: Command.ChatInputInteraction) {
-
 		return interaction.reply({
 			content: codeBlock(
 				'asciidoc',
@@ -23,7 +22,7 @@ export class UserCommand extends SubCommandPluginCommand {
 					`• Channels  ::  ${this.container.client.channels.cache.size.toLocaleString()}`,
 					`• Version   ::  v${discordVersion}`,
 					`• Node JS   ::  ${process.version}`,
-					`• Sapphire     ::  ${sapphireVersion}`,
+					`• Sapphire  ::  ${sapphireVersion}`,
 					`${
 						this.container.client.options.shardCount
 							? `• Shard     ::  ${((interaction.guild?.shardId ?? this.container.client.options.shards) as number) + 1} / ${
