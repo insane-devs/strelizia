@@ -53,7 +53,7 @@ type GuildsWatchlist {
 model clientStorage {
   id_                 String                   @id @default(auto()) @map("_id") @db.ObjectId
   eventID             String
-  id                  String                  
+  id                  String                   @unique
   lastLeaderboardPost String
   schedules           ClientStorageSchedules[]
   triggerWords        String[]
@@ -63,7 +63,7 @@ model guilds {
   id_       String            @id @default(auto()) @map("_id") @db.ObjectId
   appeals   GuildsAppeals?
   customs   GuildsCustoms[]
-  id        String
+  id        String            @unique
   prefix    String?
   raidmode  Boolean?
   watchdog  GuildsWatchdog?
