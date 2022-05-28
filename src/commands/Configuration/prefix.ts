@@ -18,7 +18,7 @@ export class UserCommand extends SubCommandPluginCommand {
 
 		if (newPrefix) {
 			await this.container.prisma.guilds.update({
-				where: { id: message.guild!.id },
+				where: { id: message.guildId! },
 				data: {
 					prefix: newPrefix
 				}
@@ -29,7 +29,7 @@ export class UserCommand extends SubCommandPluginCommand {
 
 	public async reset(message: Message) {
 		await this.container.prisma.guilds.update({
-			where: { id: message.guild!.id },
+			where: { id: message.guildId! },
 			data: {
 				prefix: this.container.client.options.defaultPrefix as string
 			}
