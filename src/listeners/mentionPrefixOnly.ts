@@ -4,7 +4,7 @@ import type { Message } from 'discord.js';
 
 export class UserEvent extends Listener<typeof Events.MentionPrefixOnly> {
 	public async run(message: Message) {
-		const prefix = this.container.client.options.defaultPrefix;
+		const prefix = await this.container.client.fetchPrefix(message);
 		return message.channel.send(prefix ? `My prefix in this guild is: \`${prefix}\`` : 'You do not need a prefix in DMs.');
 	}
 }
