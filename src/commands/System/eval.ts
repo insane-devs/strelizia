@@ -36,7 +36,7 @@ export class UserCommand extends Command {
 			});
 		}
 
-		return send(message, { content: `${output}\n${typeFooter}`, allowedMentions: { repliedUser: false } });
+		return send(message, `${output}\n${typeFooter}`);
 	}
 
 	private async eval(message: Message, code: string, flags: { async: boolean; depth: number; showHidden: boolean }) {
