@@ -1,14 +1,20 @@
 import { inlineCode, underscore } from '@discordjs/builders';
 import { ApplyOptions } from '@sapphire/decorators';
-import { Command, Resolvers } from '@sapphire/framework';
+import { Args, Command, Resolvers } from '@sapphire/framework';
 import { SubCommandPluginCommand, SubCommandPluginCommandOptions } from '@sapphire/plugin-subcommands';
 import { badwords } from '../../badwords';
+import { send } from '@sapphire/plugin-editable-commands';
+import { Message, Role, GuildMember, MessageEmbed } from 'discord.js';
+import { chunk } from '@sapphire/utilities';
+import { PaginatedMessage } from '@sapphire/discord.js-utilities';
+import { ModeratorOnly } from '../../lib/decorators/ModeratorOnly';
 
 const HEXCODE_REGEX = /#?([\da-f]{6})/i;
 
 @ApplyOptions<SubCommandPluginCommandOptions>({
 	cooldownDelay: 3000,
 	description: "Change your custom role's name, color or icon.",
+	preconditions: ['GuildOnly'],
 	subCommands: ['rename', 'color', 'icon', 'add', 'remove', 'list	']
 })
 export class UserCommand extends SubCommandPluginCommand {
@@ -25,6 +31,81 @@ export class UserCommand extends SubCommandPluginCommand {
 			default:
 				return interaction.reply({ content: 'Invalid subcommand.', ephemeral: true });
 		}
+	}
+
+	@ModeratorOnly()
+	public async add(message: Message, args: Args) {
+		if (message.guildId !== '508495069914071040' || !message.member?.permissions.has('MODERATE_MEMBERS')) return;
+		const member = await args.pick('member');
+		const role = await args.rest('role');
+
+		const guildSettings = await this.container.prisma.guilds.findUnique({ where: { id: message.guildId! } });
+		const memberExists = guildSettings?.customs.some((data) => data.id === member.id);
+		if (memberExists) return send(message, { content: 'Member already exists in the database.' });
+
+		await this.container.prisma.guilds
+			.update({
+				where: { id: message.guildId! },
+				data: {
+					customs: {
+						push: { id: member.id, roleID: role.id }
+					}
+				}
+			})
+			.catch(() => {
+				return send(message, { content: 'An error occured when adding member to the database.' });
+			});
+
+		return send(message, { content: 'Successfully added member to the database.' });
+	}
+
+	@ModeratorOnly()
+	public async remove(message: Message, args: Args) {
+		if (message.guildId !== '508495069914071040' || !message.member?.permissions.has('MODERATE_MEMBERS')) return;
+		const memberOrRole = await args.rest(UserCommand.memberOrRole);
+
+		const guildSettings = await this.container.prisma.guilds.findUnique({ where: { id: message.guildId! } });
+		const memberOrRoleExists = guildSettings?.customs.some((data) => [data.id, data.roleID].includes(memberOrRole.id));
+		if (!memberOrRoleExists) return send(message, { content: 'Member or role does not exist in the database.' });
+
+		await this.container.prisma.guilds
+			.update({
+				where: { id: message.guildId! },
+				data: {
+					customs: {
+						deleteMany: { where: { id: memberOrRole.id, OR: { roleID: memberOrRole.id } } }
+					}
+				}
+			})
+			.catch(() => {
+				return send(message, { content: 'An error occured when adding member to the database.' });
+			});
+
+		return send(message, { content: 'Successfully removed entry to the database.' });
+	}
+
+	@ModeratorOnly()
+	public async list(message: Message) {
+		if (message.guildId !== '508495069914071040') return;
+
+		const guildSettings = await this.container.prisma.guilds.findUnique({ where: { id: message.guildId } });
+		if (guildSettings?.customs.length) return send(message, 'Custom list is empty.');
+
+		const customChunks = chunk(guildSettings?.customs!, 10);
+		const paginatedMessage = new PaginatedMessage({
+			template: new MessageEmbed()
+				.setAuthor({ name: 'Custom role list', iconURL: message.guild?.iconURL({ dynamic: true })! })
+				.setColor('RANDOM')
+		});
+
+		for (const chunk of customChunks) {
+			paginatedMessage.addPageEmbed((embed) => {
+				embed.setDescription(chunk.map((data) => `• <@!${data.id}> | <@&${data.roleID}> (${data.roleID})`).join('\n'));
+				return embed;
+			});
+		}
+
+		return paginatedMessage.run(message, message.author).catch((err) => this.container.logger.error(err));
 	}
 
 	private async rename(interaction: Command.ChatInputInteraction) {
@@ -118,13 +199,6 @@ export class UserCommand extends SubCommandPluginCommand {
 		}
 	}
 
-	public async getCustomUser(interaction: Command.ChatInputInteraction) {
-		const guildSetting = await this.container.prisma.guilds.findUnique({ where: { id: interaction.guildId! } });
-		const customRoleOwner = guildSetting?.customs.find((entry) => entry.id === interaction.user.id);
-
-		return customRoleOwner || null;
-	}
-
 	public override registerApplicationCommands(registry: Command.Registry) {
 		registry.registerChatInputCommand(
 			(builder) =>
@@ -158,4 +232,26 @@ export class UserCommand extends SubCommandPluginCommand {
 			}
 		);
 	}
+
+	public async getCustomUser(interaction: Command.ChatInputInteraction) {
+		const guildSetting = await this.container.prisma.guilds.findUnique({ where: { id: interaction.guildId! } });
+		const customRoleOwner = guildSetting?.customs.find((entry) => entry.id === interaction.user.id);
+
+		return customRoleOwner || null;
+	}
+
+	private static memberOrRole = Args.make<Role | GuildMember>(async (parameter, { argument, message }) => {
+		const tryRole = await Resolvers.resolveRole(parameter, message.guild!);
+		const tryMember = await Resolvers.resolveMember(parameter, message.guild!);
+
+		if (tryRole.success) return Args.ok(tryRole.value);
+		else if (tryMember.success) return Args.ok(tryMember.value);
+		else
+			return Args.error({
+				argument,
+				parameter,
+				identifier: 'MemberOrRoleError',
+				message: 'The provided argument was neither a GuildMember nor a Role.'
+			});
+	});
 }
