@@ -45,7 +45,7 @@ export class StreliziaClient extends SapphireClient {
 
 	public override fetchPrefix = async (message: Message) => {
 		if (isGuildBasedChannel(message.channel)) {
-			const guild = await container.prisma.guilds.findUnique({ where: { id: message.guild!.id } });
+			const guild = await container.prisma.guilds.findUnique({ where: { id: message.guildId! } });
 			return (guild?.prefix as string) ?? this.options.defaultPrefix;
 		}
 		return this.options.defaultPrefix as string;
