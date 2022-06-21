@@ -1,14 +1,13 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import type { Command } from '@sapphire/framework';
-import { SubCommandPluginCommand, SubCommandPluginCommandOptions } from '@sapphire/plugin-subcommands';
+import { Command, CommandOptions } from '@sapphire/framework';
 
-@ApplyOptions<SubCommandPluginCommandOptions>({
+@ApplyOptions<CommandOptions>({
 	description: 'Locks and prevent the @everyone role from speaking in the whole server.',
 	requiredUserPermissions: ['MODERATE_MEMBERS'],
 	requiredClientPermissions: ['MANAGE_ROLES'],
 	chatInputCommand: { register: true, guildIds: ['330948931397615616', '508495069914071040', '889292703525900288'] }
 })
-export class UserCommand extends SubCommandPluginCommand {
+export class UserCommand extends Command {
 	public async chatInputRun(interaction: Command.ChatInputInteraction) {
 		await interaction.reply({ content: 'Locking server...', allowedMentions: { repliedUser: false } });
 
