@@ -88,7 +88,7 @@
   resolved "https://registry.yarnpkg.com/@sapphire/discord-utilities/-/discord-utilities-2.11.2.tgz#e30c82449f877bd9d99df05d986416e41325d54e"
   integrity sha512-avkmhAw8kvKogYuTx3QSAnoYhQfJ5/fMHVOtM+7QztDz81y2VXMYySLOp4azboXqhR76XOk5lyHi/+Ho+FIqmQ==
 
-"@sapphire/discord.js-utilities@^4.11.2", "@sapphire/discord.js-utilities@^4.4.0":
+"@sapphire/discord.js-utilities@^4.11.3", "@sapphire/discord.js-utilities@^4.4.0":
   version "4.11.3"
   resolved "https://registry.yarnpkg.com/@sapphire/discord.js-utilities/-/discord.js-utilities-4.11.3.tgz#78bc552fe0d7e7ccecde65ad83e4ba3d39b230d0"
   integrity sha512-ZDQ3Bcw0gemMWmLwUk/dJm/LCPgLyYzJoP3muBJDkZXsyOpmTdJDYh98qxXGaxZ+bAFaqwc2HPWuiTZQNjmEsQ==
@@ -105,14 +105,14 @@
   dependencies:
     cross-fetch "^3.1.5"
 
-"@sapphire/framework@^3.0.0-next.9d876ff.0":
-  version "3.0.0-next.9d876ff.0"
-  resolved "https://registry.yarnpkg.com/@sapphire/framework/-/framework-3.0.0-next.9d876ff.0.tgz#cba315a1a5eb02e640cd9b48bdbda165e97938c9"
-  integrity sha512-JuioWMBuTMAfN9z9lZJZxrh9ruQh1MDfxdRY64yynkdSMK2aBaAujUeuMd9BTs8jcBO8oAW/heOFoTw2/PpyPg==
+"@sapphire/framework@next":
+  version "3.0.0-next.e669f2b.0"
+  resolved "https://registry.yarnpkg.com/@sapphire/framework/-/framework-3.0.0-next.e669f2b.0.tgz#2557e6bea6b45f4b9597e57fd088ed330a263034"
+  integrity sha512-lRFRkRZVRnlLa0MEI5jEw5V+hn0BbV2KCuN4TV11y3RR6k1BpojXNcMYNKVnOAg6qmaIU75WuRmXNQ7mSZxkdw==
   dependencies:
     "@discordjs/builders" "^0.15.0"
     "@sapphire/discord-utilities" "^2.11.2"
-    "@sapphire/discord.js-utilities" "^4.11.2"
+    "@sapphire/discord.js-utilities" "^4.11.3"
     "@sapphire/pieces" "^3.3.4"
     "@sapphire/ratelimits" "^2.4.4"
     "@sapphire/result" "^1.1.1"
@@ -159,10 +159,10 @@
     colorette "^2.0.16"
     tslib "^2.3.1"
 
-"@sapphire/plugin-subcommands@^2.2.1-next.0b0ca4d.0":
-  version "2.2.1-next.0b0ca4d.0"
-  resolved "https://registry.yarnpkg.com/@sapphire/plugin-subcommands/-/plugin-subcommands-2.2.1-next.0b0ca4d.0.tgz#e51867dc10e2f96d2a1568903b0e2ba0eaaee89c"
-  integrity sha512-Dqc1O2/KTdr2NGxc8UQQP0CujFZNZDXyk+t5D7dEw2PNth2zWN8EmKO8td8qBBy1001nMm7WaRtQvkY1lM68ow==
+"@sapphire/plugin-subcommands@^3.0.0-pr-271.3e0f2c71.0":
+  version "3.0.0-pr-271.3e0f2c71.0"
+  resolved "https://registry.yarnpkg.com/@sapphire/plugin-subcommands/-/plugin-subcommands-3.0.0-pr-271.3e0f2c71.0.tgz#2152d678215284cde6aafdfe482248636f016f4b"
+  integrity sha512-Rlxs2nF9fsHMjwh2PDtPSYrOOflFIKrg+RJ1Mgg+XlF2mUZFQkL6mWBODtaODsy9XBcU3ry03iTP/2zFOh+5xg==
   dependencies:
     tslib "^2.4.0"
 
