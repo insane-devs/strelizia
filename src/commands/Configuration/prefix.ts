@@ -1,17 +1,20 @@
 import { bold } from '@discordjs/builders';
 import { ApplyOptions } from '@sapphire/decorators';
-import type { Args } from '@sapphire/framework';
 import { send } from '@sapphire/plugin-editable-commands';
-import { SubCommandPluginCommand, SubCommandPluginCommandOptions } from '@sapphire/plugin-subcommands';
+import { SubcommandPluginCommand, SubcommandPluginCommandOptions } from '@sapphire/plugin-subcommands';
+import type { Args, MessageCommandContext } from '@sapphire/framework';
 import type { Message } from 'discord.js';
 
-@ApplyOptions<SubCommandPluginCommandOptions>({
+@ApplyOptions<SubcommandPluginCommandOptions>({
 	description: "Change the bot's prefix for the server.",
 	requiredUserPermissions: ['MANAGE_GUILD'],
 	preconditions: ['GuildOnly'],
-	subCommands: ['reset', { input: 'run', default: true }]
+	subcommands: [
+		{ name: 'run', messageRun: 'run' as never, default: true },
+		{ name: 'reset', messageRun: 'reset' as never }
+	]
 })
-export class UserCommand extends SubCommandPluginCommand {
+export class UserCommand extends SubcommandPluginCommand {
 	public async run(message: Message, args: Args) {
 		const newPrefix = await args.pick('string', { maximum: 4 }).catch(() => null);
 		const prefix = (await this.container.client.fetchPrefix(message)) as string;

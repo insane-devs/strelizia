@@ -1,23 +1,29 @@
 import { inlineCode, underscore } from '@discordjs/builders';
-import { ApplyOptions } from '@sapphire/decorators';
-import { Args, Command, Resolvers } from '@sapphire/framework';
-import { SubCommandPluginCommand, SubCommandPluginCommandOptions } from '@sapphire/plugin-subcommands';
+import { ApplyOptions, RequiresUserPermissions } from '@sapphire/decorators';
+import { Args, Command, RegisterBehavior, Resolvers } from '@sapphire/framework';
+import { SubcommandPluginCommand, SubcommandPluginCommandOptions } from '@sapphire/plugin-subcommands';
 import { badwords } from '../../badwords';
 import { send } from '@sapphire/plugin-editable-commands';
 import { Message, Role, GuildMember, MessageEmbed } from 'discord.js';
 import { chunk } from '@sapphire/utilities';
-import { PaginatedMessage } from '@sapphire/discord.js-utilities';
-import { ModeratorOnly } from '../../lib/decorators/ModeratorOnly';
+import { LazyPaginatedMessage } from '@sapphire/discord.js-utilities';
 
 const HEXCODE_REGEX = /#?([\da-f]{6})/i;
 
-@ApplyOptions<SubCommandPluginCommandOptions>({
+@ApplyOptions<SubcommandPluginCommandOptions>({
 	cooldownDelay: 3000,
 	description: "Change your custom role's name, color or icon.",
 	preconditions: ['GuildOnly'],
-	subCommands: ['rename', 'color', 'icon', 'add', 'remove', 'list	']
+	subcommands: [
+		{ name: 'rename', chatInputRun: 'rename' as never },
+		{ name: 'color', chatInputRun: 'color' as never },
+		{ name: 'icon', chatInputRun: 'icon' as never },
+		{ name: 'add', messageRun: 'add' as never },
+		{ name: 'remove', messageRun: 'remove' as never },
+		{ name: 'list', messageRun: 'list' as never }
+	]
 })
-export class UserCommand extends SubCommandPluginCommand {
+export class UserCommand extends SubcommandPluginCommand {
 	public override async chatInputRun(interaction: Command.ChatInputInteraction) {
 		const subcommand = interaction.options.getSubcommand(true);
 
@@ -33,7 +39,7 @@ export class UserCommand extends SubCommandPluginCommand {
 		}
 	}
 
-	@ModeratorOnly()
+	@RequiresUserPermissions('MODERATE_MEMBERS')
 	public async add(message: Message, args: Args) {
 		if (message.guildId !== '508495069914071040' || !message.member?.permissions.has('MODERATE_MEMBERS')) return;
 		const member = await args.pick('member');
@@ -59,7 +65,7 @@ export class UserCommand extends SubCommandPluginCommand {
 		return send(message, { content: 'Successfully added member to the database.' });
 	}
 
-	@ModeratorOnly()
+	@RequiresUserPermissions('MODERATE_MEMBERS')
 	public async remove(message: Message, args: Args) {
 		if (message.guildId !== '508495069914071040' || !message.member?.permissions.has('MODERATE_MEMBERS')) return;
 		const memberOrRole = await args.rest(UserCommand.memberOrRole);
@@ -84,15 +90,17 @@ export class UserCommand extends SubCommandPluginCommand {
 		return send(message, { content: 'Successfully removed entry to the database.' });
 	}
 
-	@ModeratorOnly()
+	@RequiresUserPermissions('MODERATE_MEMBERS')
 	public async list(message: Message) {
 		if (message.guildId !== '508495069914071040') return;
 
+		const msg = await send(message, 'Loading list...');
+
 		const guildSettings = await this.container.prisma.guilds.findUnique({ where: { id: message.guildId } });
-		if (guildSettings?.customs.length) return send(message, 'Custom list is empty.');
+		if (!guildSettings?.customs.length) return send(message, 'Custom list is empty.');
 
 		const customChunks = chunk(guildSettings?.customs!, 10);
-		const paginatedMessage = new PaginatedMessage({
+		const paginatedMessage = new LazyPaginatedMessage({
 			template: new MessageEmbed()
 				.setAuthor({ name: 'Custom role list', iconURL: message.guild?.iconURL({ dynamic: true })! })
 				.setColor('RANDOM')
@@ -105,7 +113,7 @@ export class UserCommand extends SubCommandPluginCommand {
 			});
 		}
 
-		return paginatedMessage.run(message, message.author).catch((err) => this.container.logger.error(err));
+		return paginatedMessage.run(msg).catch((err) => this.container.logger.error(err));
 	}
 
 	private async rename(interaction: Command.ChatInputInteraction) {
@@ -228,7 +236,8 @@ export class UserCommand extends SubCommandPluginCommand {
 							)
 					),
 			{
-				guildIds: ['508495069914071040']
+				guildIds: ['508495069914071040'],
+				behaviorWhenNotIdentical: RegisterBehavior.Overwrite
 			}
 		);
 	}

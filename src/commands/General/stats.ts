@@ -1,16 +1,16 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { Command, version as sapphireVersion } from '@sapphire/framework';
-import { SubCommandPluginCommand, SubCommandPluginCommandOptions } from '@sapphire/plugin-subcommands';
+import { SubcommandPluginCommand, SubcommandPluginCommandOptions } from '@sapphire/plugin-subcommands';
 import { DurationFormatter } from '@sapphire/time-utilities';
 import { version as discordVersion } from 'discord.js';
 import { loadavg, uptime } from 'os';
 import { codeBlock } from '@discordjs/builders';
 
-@ApplyOptions<SubCommandPluginCommandOptions>({
+@ApplyOptions<SubcommandPluginCommandOptions>({
 	description: "Display the bot's statistics.",
 	chatInputCommand: { register: true }
 })
-export class UserCommand extends SubCommandPluginCommand {
+export class UserCommand extends SubcommandPluginCommand {
 	public async chatInputRun(interaction: Command.ChatInputInteraction) {
 		return interaction.reply({
 			content: codeBlock(
