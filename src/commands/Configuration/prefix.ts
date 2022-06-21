@@ -2,7 +2,7 @@ import { bold } from '@discordjs/builders';
 import { ApplyOptions } from '@sapphire/decorators';
 import { send } from '@sapphire/plugin-editable-commands';
 import { SubcommandPluginCommand, SubcommandPluginCommandOptions } from '@sapphire/plugin-subcommands';
-import type { Args, MessageCommandContext } from '@sapphire/framework';
+import type { Args } from '@sapphire/framework';
 import type { Message } from 'discord.js';
 
 @ApplyOptions<SubcommandPluginCommandOptions>({
