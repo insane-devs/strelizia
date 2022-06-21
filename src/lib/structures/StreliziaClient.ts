@@ -1,5 +1,5 @@
 import { isGuildBasedChannel } from '@sapphire/discord.js-utilities';
-import { container, LogLevel, SapphireClient } from '@sapphire/framework';
+import { ApplicationCommandRegistries, container, LogLevel, RegisterBehavior, SapphireClient } from '@sapphire/framework';
 import type { Message } from 'discord.js';
 
 export class StreliziaClient extends SapphireClient {
@@ -32,6 +32,7 @@ export class StreliziaClient extends SapphireClient {
 	}
 
 	public override async login(token?: string) {
+		ApplicationCommandRegistries.setDefaultBehaviorWhenNotIdentical(RegisterBehavior.Overwrite);
 		container.logger.info('Connecting to database...');
 		await container.prisma.$connect();
 
