@@ -1,11 +1,11 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import { Command, CommandOptions } from '@sapphire/framework';
+import { ChatInputCommand, Command, CommandOptions } from '@sapphire/framework';
+import { Permissions } from 'discord.js';
 
 @ApplyOptions<CommandOptions>({
 	description: 'Locks and prevent the @everyone role from speaking in the whole server.',
 	requiredUserPermissions: ['MODERATE_MEMBERS'],
-	requiredClientPermissions: ['MANAGE_ROLES'],
-	chatInputCommand: { register: true, guildIds: ['330948931397615616', '508495069914071040', '889292703525900288'] }
+	requiredClientPermissions: ['MANAGE_ROLES']
 })
 export class UserCommand extends Command {
 	public async chatInputRun(interaction: Command.ChatInputInteraction) {
@@ -18,5 +18,12 @@ export class UserCommand extends Command {
 		const newPerms = everyone?.permissions.toArray().filter((perms) => !['SEND_MESSAGES', 'SEND_MESSAGES_IN_THREADS'].includes(perms));
 		await everyone?.setPermissions(newPerms, `Strelizia lock command executed by ${interaction.user.tag}`);
 		return interaction.editReply({ content: 'Successfully locked the server.' });
+	}
+
+	public override registerApplicationCommands(registry: ChatInputCommand.Registry) {
+		registry.registerChatInputCommand(
+			(builder) => builder.setName(this.name).setDefaultMemberPermissions(new Permissions('MODERATE_MEMBERS').bitfield),
+			{ guildIds: ['330948931397615616', '508495069914071040', '889292703525900288'] }
+		);
 	}
 }

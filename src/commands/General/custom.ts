@@ -1,29 +1,29 @@
 import { inlineCode, underscore } from '@discordjs/builders';
 import { ApplyOptions, RequiresUserPermissions } from '@sapphire/decorators';
 import { Args, Command, RegisterBehavior, Resolvers } from '@sapphire/framework';
-import { SubcommandPluginCommand, SubcommandPluginCommandOptions } from '@sapphire/plugin-subcommands';
 import { badwords } from '../../badwords';
 import { send } from '@sapphire/plugin-editable-commands';
 import { Message, Role, GuildMember, MessageEmbed } from 'discord.js';
 import { chunk } from '@sapphire/utilities';
 import { LazyPaginatedMessage } from '@sapphire/discord.js-utilities';
+import { Subcommand, SubcommandOptions } from '@sapphire/plugin-subcommands';
 
 const HEXCODE_REGEX = /#?([\da-f]{6})/i;
 
-@ApplyOptions<SubcommandPluginCommandOptions>({
+@ApplyOptions<SubcommandOptions>({
 	cooldownDelay: 3000,
 	description: "Change your custom role's name, color or icon.",
 	preconditions: ['GuildOnly'],
 	subcommands: [
-		{ name: 'rename', chatInputRun: 'rename' as never },
-		{ name: 'color', chatInputRun: 'color' as never },
-		{ name: 'icon', chatInputRun: 'icon' as never },
-		{ name: 'add', messageRun: 'add' as never },
-		{ name: 'remove', messageRun: 'remove' as never },
-		{ name: 'list', messageRun: 'list' as never }
+		{ name: 'rename', chatInputRun: 'rename' },
+		{ name: 'color', chatInputRun: 'color' },
+		{ name: 'icon', chatInputRun: 'icon' },
+		{ name: 'add', messageRun: 'add' },
+		{ name: 'remove', messageRun: 'remove' },
+		{ name: 'list', messageRun: 'list' }
 	]
 })
-export class UserCommand extends SubcommandPluginCommand {
+export class UserCommand extends Subcommand {
 	public override async chatInputRun(interaction: Command.ChatInputInteraction) {
 		const subcommand = interaction.options.getSubcommand(true);
 
@@ -165,8 +165,8 @@ export class UserCommand extends SubcommandPluginCommand {
 
 		const role = interaction.guild?.roles.cache.get(roleOwner.roleID!)!;
 
-		if (url.success) {
-			const { href } = url.value;
+		if (url.isOk()) {
+			const { href } = url.unwrap();
 			if (role.unicodeEmoji) await role.setUnicodeEmoji(null);
 			const roleUpdate = await role.setIcon(href, `Custom role name change requested by ${interaction.user.tag}.`).catch(() => null);
 			if (!roleUpdate)
@@ -177,11 +177,11 @@ export class UserCommand extends SubcommandPluginCommand {
 			return interaction.reply({ content: 'Successfully changed your custom role icon!', ephemeral: true });
 		}
 
-		if (emoji.success && emoji.value.id) {
-			const { animated, name, id } = emoji.value;
+		if (emoji.isOkAnd((emoji) => !!emoji.id)) {
+			const { id, animated, name } = emoji.unwrap();
 			const roleUpdate = await role
 				.setIcon(
-					`https://cdn.discordapp.com/emojis/${emoji.value.id}.png?size=56&quality=lossless`,
+					`https://cdn.discordapp.com/emojis/${id}.png?size=56&quality=lossless`,
 					`Custom role name change requested by ${interaction.user.tag}.`
 				)
 				.catch(() => null);
@@ -195,15 +195,14 @@ export class UserCommand extends SubcommandPluginCommand {
 				ephemeral: true
 			});
 		} else {
-			const roleUpdate = await role
-				.setUnicodeEmoji(emoji.value?.name!, `Custom role icon change requested by ${interaction.user.tag}.`)
-				.catch(() => null);
+			const { name } = emoji.unwrap();
+			const roleUpdate = await role.setUnicodeEmoji(name, `Custom role icon change requested by ${interaction.user.tag}.`).catch(() => null);
 			if (!roleUpdate)
 				return interaction.reply({
 					content: 'Something went wrong when updating your custom role icon, please try again later.',
 					ephemeral: true
 				});
-			return interaction.reply({ content: `Successfully changed your custom role icon to ${emoji.value?.name}!`, ephemeral: true });
+			return interaction.reply({ content: `Successfully changed your custom role icon to ${name}!`, ephemeral: true });
 		}
 	}
 
@@ -253,8 +252,8 @@ export class UserCommand extends SubcommandPluginCommand {
 		const tryRole = await Resolvers.resolveRole(parameter, message.guild!);
 		const tryMember = await Resolvers.resolveMember(parameter, message.guild!);
 
-		if (tryRole.success) return Args.ok(tryRole.value);
-		else if (tryMember.success) return Args.ok(tryMember.value);
+		if (tryRole.isOk()) return Args.ok(tryRole.unwrap());
+		else if (tryMember.isOk()) return Args.ok(tryMember.unwrap());
 		else
 			return Args.error({
 				argument,
