@@ -10,12 +10,12 @@ import type { Message } from 'discord.js';
 	requiredUserPermissions: ['MANAGE_GUILD'],
 	preconditions: ['GuildOnly'],
 	subcommands: [
-		{ name: 'run', messageRun: 'run' as never, default: true },
-		{ name: 'reset', messageRun: 'reset' as never }
+		{ name: 'show', messageRun: 'show', default: true },
+		{ name: 'reset', messageRun: 'reset' }
 	]
 })
 export class UserCommand extends Subcommand {
-	public async run(message: Message, args: Args) {
+	public async show(message: Message, args: Args) {
 		const newPrefix = await args.pick('string', { maximum: 4 }).catch(() => null);
 		const prefix = (await this.container.client.fetchPrefix(message)) as string;
 
