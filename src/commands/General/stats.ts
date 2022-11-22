@@ -10,6 +10,10 @@ import { codeBlock } from '@discordjs/builders';
 	description: "Display the bot's statistics."
 })
 export class UserCommand extends Subcommand {
+	public override registerApplicationCommands(registry: ChatInputCommand.Registry) {
+		registry.registerChatInputCommand((builder) => builder.setName(this.name).setDescription(this.description));
+	}
+
 	public async chatInputRun(interaction: Command.ChatInputInteraction) {
 		return interaction.reply({
 			content: codeBlock(
@@ -42,9 +46,5 @@ export class UserCommand extends Subcommand {
 				].join('\n')
 			)
 		});
-	}
-
-	public override registerApplicationCommands(registry: ChatInputCommand.Registry) {
-		registry.registerChatInputCommand((builder) => builder.setName(this.name).setDescription(this.description));
 	}
 }

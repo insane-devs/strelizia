@@ -19,6 +19,25 @@ import { MessageEmbed } from 'discord.js';
 	].join('\n')
 })
 export class UserCommand extends Command {
+	public override registerApplicationCommands(registry: Command.Registry) {
+		registry.registerChatInputCommand(
+			(builder) =>
+				builder
+					.setName(this.name)
+					.setDescription(this.description)
+					.addStringOption((options) => options.setName('duration').setDescription('Show users who joined since inputted time.'))
+					.addBooleanOption((options) =>
+						options.setName('noav').setDescription('Should the command filter and show users with no avatars set in their profile.')
+					)
+					.addStringOption((options) =>
+						options
+							.setName('createdat')
+							.setDescription('Should the command filter and show users whose accounts were created at the supplied time.')
+					),
+			{ guildIds: ['508495069914071040'] }
+		);
+	}
+
 	public async chatInputRun(interaction: Command.ChatInputInteraction) {
 		const stopwatch = new Stopwatch();
 		// Get all possible arguments
@@ -65,24 +84,5 @@ export class UserCommand extends Command {
 		}
 
 		return paginatedMessage.run(interaction);
-	}
-
-	public override registerApplicationCommands(registry: Command.Registry) {
-		registry.registerChatInputCommand(
-			(builder) =>
-				builder
-					.setName(this.name)
-					.setDescription(this.description)
-					.addStringOption((options) => options.setName('duration').setDescription('Show users who joined since inputted time.'))
-					.addBooleanOption((options) =>
-						options.setName('noav').setDescription('Should the command filter and show users with no avatars set in their profile.')
-					)
-					.addStringOption((options) =>
-						options
-							.setName('createdat')
-							.setDescription('Should the command filter and show users whose accounts were created at the supplied time.')
-					),
-			{ guildIds: ['508495069914071040'] }
-		);
 	}
 }

@@ -24,6 +24,40 @@ const HEXCODE_REGEX = /#?([\da-f]{6})/i;
 	]
 })
 export class UserCommand extends Subcommand {
+	public override registerApplicationCommands(registry: Command.Registry) {
+		registry.registerChatInputCommand(
+			(builder) =>
+				builder
+					.setName(this.name)
+					.setDescription(this.description)
+					.addSubcommand((command) =>
+						command
+							.setName('color')
+							.setDescription('Change your role color.')
+							.addStringOption((options) =>
+								options.setName('color').setDescription('The new color of your role, must be a hex code.').setRequired(true)
+							)
+					)
+					.addSubcommand((command) =>
+						command
+							.setName('rename')
+							.setDescription('Rename your role.')
+							.addStringOption((options) => options.setName('name').setDescription('The new name of your role.').setRequired(true))
+					)
+					.addSubcommand((command) =>
+						command
+							.setName('icon')
+							.setDescription('Change your role icon.')
+							.addStringOption((options) =>
+								options.setName('icon').setDescription('The new icon for your role, can be an emoji or a URL.').setRequired(true)
+							)
+					),
+			{
+				guildIds: ['508495069914071040']
+			}
+		);
+	}
+
 	public override async chatInputRun(interaction: Command.ChatInputInteraction) {
 		const subcommand = interaction.options.getSubcommand(true);
 
@@ -204,41 +238,6 @@ export class UserCommand extends Subcommand {
 				});
 			return interaction.reply({ content: `Successfully changed your custom role icon to ${name}!`, ephemeral: true });
 		}
-	}
-
-	public override registerApplicationCommands(registry: Command.Registry) {
-		registry.registerChatInputCommand(
-			(builder) =>
-				builder
-					.setName(this.name)
-					.setDescription(this.description)
-					.addSubcommand((command) =>
-						command
-							.setName('color')
-							.setDescription('Change your role color.')
-							.addStringOption((options) =>
-								options.setName('color').setDescription('The new color of your role, must be a hex code.').setRequired(true)
-							)
-					)
-					.addSubcommand((command) =>
-						command
-							.setName('rename')
-							.setDescription('Rename your role.')
-							.addStringOption((options) => options.setName('name').setDescription('The new name of your role.').setRequired(true))
-					)
-					.addSubcommand((command) =>
-						command
-							.setName('icon')
-							.setDescription('Change your role icon.')
-							.addStringOption((options) =>
-								options.setName('icon').setDescription('The new icon for your role, can be an emoji or a URL.').setRequired(true)
-							)
-					),
-			{
-				guildIds: ['508495069914071040'],
-				behaviorWhenNotIdentical: RegisterBehavior.Overwrite
-			}
-		);
 	}
 
 	public async getCustomUser(interaction: Command.ChatInputInteraction) {

@@ -8,6 +8,14 @@ import { Permissions } from 'discord.js';
 	requiredClientPermissions: ['MANAGE_ROLES']
 })
 export class UserCommand extends Command {
+	public override registerApplicationCommands(registry: ChatInputCommand.Registry) {
+		registry.registerChatInputCommand(
+			(builder) =>
+				builder.setName(this.name).setDescription(this.description).setDefaultMemberPermissions(new Permissions('MODERATE_MEMBERS').bitfield),
+			{ guildIds: ['330948931397615616', '508495069914071040', '889292703525900288'] }
+		);
+	}
+
 	public async chatInputRun(interaction: Command.ChatInputInteraction) {
 		await interaction.reply({ content: 'Unlocking server...', allowedMentions: { repliedUser: false } });
 
@@ -19,13 +27,5 @@ export class UserCommand extends Command {
 		newPerms.push('SEND_MESSAGES', 'SEND_MESSAGES_IN_THREADS');
 		await everyone?.setPermissions(newPerms, `Strelizia unlock command executed by ${interaction.user.tag}`);
 		return interaction.editReply({ content: 'Successfully unlocked the server.' });
-	}
-
-	public override registerApplicationCommands(registry: ChatInputCommand.Registry) {
-		registry.registerChatInputCommand(
-			(builder) =>
-				builder.setName(this.name).setDescription(this.description).setDefaultMemberPermissions(new Permissions('MODERATE_MEMBERS').bitfield),
-			{ guildIds: ['330948931397615616', '508495069914071040', '889292703525900288'] }
-		);
 	}
 }
