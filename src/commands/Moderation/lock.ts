@@ -10,7 +10,8 @@ import { Permissions } from 'discord.js';
 export class UserCommand extends Command {
 	public override registerApplicationCommands(registry: ChatInputCommand.Registry) {
 		registry.registerChatInputCommand(
-			(builder) => builder.setName(this.name).setDefaultMemberPermissions(new Permissions('MODERATE_MEMBERS').bitfield),
+			(builder) =>
+				builder.setName(this.name).setDescription(this.description).setDefaultMemberPermissions(new Permissions('MODERATE_MEMBERS').bitfield),
 			{ guildIds: ['330948931397615616', '508495069914071040', '889292703525900288'] }
 		);
 	}
