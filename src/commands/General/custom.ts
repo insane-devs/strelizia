@@ -1,6 +1,6 @@
 import { inlineCode, underscore } from '@discordjs/builders';
 import { ApplyOptions, RequiresUserPermissions } from '@sapphire/decorators';
-import { Args, Command, RegisterBehavior, Resolvers } from '@sapphire/framework';
+import { Args, Command, Resolvers } from '@sapphire/framework';
 import { badwords } from '../../badwords';
 import { send } from '@sapphire/plugin-editable-commands';
 import { Message, Role, GuildMember, MessageEmbed } from 'discord.js';
