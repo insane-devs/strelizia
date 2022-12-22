@@ -1,5 +1,5 @@
 import { inlineCode, underscore } from '@discordjs/builders';
-import { ApplyOptions, RequiresUserPermissions } from '@sapphire/decorators';
+import { ApplyOptions } from '@sapphire/decorators';
 import { Args, Command, Resolvers } from '@sapphire/framework';
 import { badwords } from '../../badwords';
 import { send } from '@sapphire/plugin-editable-commands';
@@ -7,6 +7,7 @@ import { Message, Role, GuildMember, MessageEmbed } from 'discord.js';
 import { chunk } from '@sapphire/utilities';
 import { LazyPaginatedMessage } from '@sapphire/discord.js-utilities';
 import { Subcommand, SubcommandOptions } from '@sapphire/plugin-subcommands';
+import { ModeratorOnly } from '../../lib/decorators/ModeratorOnly';
 
 const HEXCODE_REGEX = /#?([\da-f]{6})/i;
 
@@ -15,9 +16,9 @@ const HEXCODE_REGEX = /#?([\da-f]{6})/i;
 	description: "Change your custom role's name, color or icon.",
 	preconditions: ['GuildOnly'],
 	subcommands: [
-		{ name: 'rename', chatInputRun: 'rename' },
-		{ name: 'color', chatInputRun: 'color' },
-		{ name: 'icon', chatInputRun: 'icon' },
+		{ name: 'rename', chatInputRun: 'chatInputRename' },
+		{ name: 'color', chatInputRun: 'chatInputColor' },
+		{ name: 'icon', chatInputRun: 'chatInputIcon' },
 		{ name: 'add', messageRun: 'add' },
 		{ name: 'remove', messageRun: 'remove' },
 		{ name: 'list', messageRun: 'list' }
@@ -58,22 +59,7 @@ export class UserCommand extends Subcommand {
 		);
 	}
 
-	public override async chatInputRun(interaction: Command.ChatInputInteraction) {
-		const subcommand = interaction.options.getSubcommand(true);
-
-		switch (subcommand) {
-			case 'rename':
-				return await this.rename(interaction);
-			case 'color':
-				return await this.color(interaction);
-			case 'icon':
-				return await this.icon(interaction);
-			default:
-				return interaction.reply({ content: 'Invalid subcommand.', ephemeral: true });
-		}
-	}
-
-	@RequiresUserPermissions('MODERATE_MEMBERS')
+	@ModeratorOnly()
 	public async add(message: Message, args: Args) {
 		if (message.guildId !== '508495069914071040' || !message.member?.permissions.has('MODERATE_MEMBERS')) return;
 		const member = await args.pick('member');
@@ -99,7 +85,7 @@ export class UserCommand extends Subcommand {
 		return send(message, { content: 'Successfully added member to the database.' });
 	}
 
-	@RequiresUserPermissions('MODERATE_MEMBERS')
+	@ModeratorOnly()
 	public async remove(message: Message, args: Args) {
 		if (message.guildId !== '508495069914071040' || !message.member?.permissions.has('MODERATE_MEMBERS')) return;
 		const memberOrRole = await args.rest(UserCommand.memberOrRole);
@@ -124,7 +110,7 @@ export class UserCommand extends Subcommand {
 		return send(message, { content: 'Successfully removed entry to the database.' });
 	}
 
-	@RequiresUserPermissions('MODERATE_MEMBERS')
+	@ModeratorOnly()
 	public async list(message: Message) {
 		if (message.guildId !== '508495069914071040') return;
 
@@ -136,12 +122,12 @@ export class UserCommand extends Subcommand {
 		const customChunks = chunk(guildSettings?.customs!, 10);
 		const paginatedMessage = new LazyPaginatedMessage({
 			template: new MessageEmbed()
-				.setAuthor({ name: 'Custom role list', iconURL: message.guild?.iconURL({ dynamic: true })! })
+				.setAuthor({ name: 'Custom role list', iconURL: message.guild?.iconURL({ dynamic: false })! })
 				.setColor('RANDOM')
 		});
 
 		for (const chunk of customChunks) {
-			paginatedMessage.addPageEmbed((embed) => {
+			paginatedMessage.addPageEmbed((embed: MessageEmbed) => {
 				embed.setDescription(chunk.map((data) => `• <@!${data.id}> | <@&${data.roleID}> (${data.roleID})`).join('\n'));
 				return embed;
 			});
@@ -150,7 +136,7 @@ export class UserCommand extends Subcommand {
 		return paginatedMessage.run(msg).catch((err) => this.container.logger.error(err));
 	}
 
-	private async rename(interaction: Command.ChatInputInteraction) {
+	public async rename(interaction: Command.ChatInputInteraction) {
 		const newName = interaction.options.getString('name')!;
 		const roleOwner = await this.getCustomUser(interaction);
 
@@ -172,7 +158,7 @@ export class UserCommand extends Subcommand {
 		return interaction.reply({ content: `Successfully changed your custom role name to ${inlineCode(newName)}!`, ephemeral: true });
 	}
 
-	private async color(interaction: Command.ChatInputInteraction) {
+	public async color(interaction: Command.ChatInputInteraction) {
 		const newColor = interaction.options.getString('color')!;
 		const roleOwner = await this.getCustomUser(interaction);
 
@@ -189,7 +175,7 @@ export class UserCommand extends Subcommand {
 		return interaction.reply({ content: `Successfully changed your custom role color to ${inlineCode(newColor)}!`, ephemeral: true });
 	}
 
-	private async icon(interaction: Command.ChatInputInteraction) {
+	public async icon(interaction: Command.ChatInputInteraction) {
 		const newIcon = interaction.options.getString('icon')!;
 		const roleOwner = await this.getCustomUser(interaction);
 		if (!roleOwner) return interaction.reply({ content: 'You do not have a custom role.', ephemeral: true });
@@ -240,7 +226,7 @@ export class UserCommand extends Subcommand {
 		}
 	}
 
-	public async getCustomUser(interaction: Command.ChatInputInteraction) {
+	private async getCustomUser(interaction: Command.ChatInputInteraction) {
 		const guildSetting = await this.container.prisma.guilds.findUnique({ where: { id: interaction.guildId! } });
 		const customRoleOwner = guildSetting?.customs.find((entry) => entry.id === interaction.user.id);
 
